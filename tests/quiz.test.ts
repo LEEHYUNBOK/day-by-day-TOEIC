@@ -39,6 +39,30 @@ describe('buildWordQuiz', () => {
     const texts = items[0].choices.map(c => c.text);
     expect(texts.filter(t => t === '첫째')).toHaveLength(1);
   });
+  it('prefers same-day words over the wider pool for distractors', () => {
+    const target = w('t-1', 'target', '표적');
+    const dayWords = [
+      target,
+      w('t-2', 'apple', '사과'),
+      w('t-3', 'banana', '바나나'),
+      w('t-4', 'cherry', '체리'),
+    ];
+    const poolOnly = [
+      w('p-1', 'durian', '두리안'),
+      w('p-2', 'egg', '계란'),
+      w('p-3', 'fig', '무화과'),
+    ];
+    const pool = [...dayWords, ...poolOnly];
+    const items = buildWordQuiz(dayWords, pool, fixedRng);
+    const item = items.find(i => i.itemId === 't-1')!;
+    const distractorTexts = item.choices.filter(c => !c.correct).map(c => c.text);
+    expect(distractorTexts.slice().sort()).toEqual(['바나나', '사과', '체리']);
+  });
+  it('throws when the pool cannot supply 3 distinct wrong meanings', () => {
+    const target = w('t-1', 'target', '표적');
+    const tooSmallPool = [target, w('t-2', 'only-other', '유일한')];
+    expect(() => buildWordQuiz([target], tooSmallPool, fixedRng)).toThrow();
+  });
 });
 
 describe('buildBlankQuiz', () => {
@@ -58,4 +82,20 @@ describe('buildArrangeQuiz', () => {
     expect(item.tokens.slice().sort()).toEqual(item.answerTokens.slice().sort());
     expect(item.tokens).not.toEqual(item.answerTokens);
   });
+  it('terminates and still differs from the answer when the rng keeps producing identity order', () => {
+    // rng = 0.99 makes every Fisher-Yates draw pick j === i, so the very first
+    // shuffle (and every retry) reproduces the answer order verbatim. This forces
+    // the bounded-retry loop to exhaust and fall back to the guaranteed swap.
+    const identityRng = () => 0.99;
+    const [item] = buildArrangeQuiz([sent], identityRng);
+    expect(item.tokens.slice().sort()).toEqual(item.answerTokens.slice().sort());
+    expect(item.tokens).not.toEqual(item.answerTokens);
+  }, 1000);
+  it('terminates on all-identical tokens even though no different arrangement exists', () => {
+    const degenerate: Sentence = {
+      id: 's-2', text: 'x x x', ko: '', blankWord: 'x', distractors: [],
+    };
+    const [item] = buildArrangeQuiz([degenerate], fixedRng);
+    expect(item.tokens).toEqual(['x', 'x', 'x']);
+  }, 1000);
 });

@@ -26,6 +26,11 @@ export function buildWordQuiz(words: Word[], pool: Word[], rng: () => number = M
       if (distractors.length === 3) break;
       if (!distractors.includes(c.meaning)) distractors.push(c.meaning);
     }
+    if (distractors.length < 3) {
+      throw new Error(
+        `buildWordQuiz: pool has only ${distractors.length} distinct wrong meaning(s) available for "${word.word}", need 3`,
+      );
+    }
     const choices = shuffle(
       [{ text: word.meaning, correct: true }, ...distractors.map(text => ({ text, correct: false }))],
       rng,
@@ -47,12 +52,28 @@ export function buildBlankQuiz(sentences: Sentence[], rng: () => number = Math.r
   });
 }
 
+const MAX_ARRANGE_RETRIES = 10;
+
 export function buildArrangeQuiz(sentences: Sentence[], rng: () => number = Math.random): ArrangeQuizItem[] {
   return sentences.map(sentence => {
     const answerTokens = sentence.text.split(/\s+/);
     let tokens = shuffle(answerTokens, rng);
     if (answerTokens.length > 1) {
-      while (tokens.join(' ') === answerTokens.join(' ')) tokens = shuffle(answerTokens, rng);
+      let attempts = 0;
+      while (tokens.join(' ') === answerTokens.join(' ') && attempts < MAX_ARRANGE_RETRIES) {
+        tokens = shuffle(answerTokens, rng);
+        attempts++;
+      }
+      if (tokens.join(' ') === answerTokens.join(' ')) {
+        // Bounded retries exhausted (degenerate rng or degenerate tokens). Force a
+        // deterministic swap of the first two distinct-valued tokens if one exists;
+        // if every token is identical, no different arrangement exists, so return as-is.
+        const firstDistinct = tokens.findIndex(t => t !== tokens[0]);
+        if (firstDistinct > 0) {
+          tokens = [...tokens];
+          [tokens[0], tokens[firstDistinct]] = [tokens[firstDistinct], tokens[0]];
+        }
+      }
     }
     return { type: 'arrange' as const, itemId: sentence.id, sentence, tokens, answerTokens };
   });
