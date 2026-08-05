@@ -46,7 +46,7 @@ export default function CalendarPage() {
 
   if (!state) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400" />
       </div>
     );
@@ -56,7 +56,7 @@ export default function CalendarPage() {
   const doneDates = new Set(Object.keys(state.records));
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-zinc-50 p-4 dark:bg-black">
+    <div className="flex flex-1 flex-col items-center bg-zinc-50 p-4 dark:bg-black">
       <div className="flex w-full max-w-xl flex-col gap-4 py-8">
         <div className="flex items-center justify-between">
           <button

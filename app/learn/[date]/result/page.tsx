@@ -63,7 +63,9 @@ export default function ResultPage() {
                 </li>
               ))}
             </ul>
-            <p className="text-xs text-gray-400 dark:text-gray-500">오답노트에 저장됨</p>
+            <Link href="/notes" className="text-xs text-gray-400 underline hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
+              오답노트에 저장됨
+            </Link>
           </div>
         )}
 

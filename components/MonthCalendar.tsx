@@ -31,7 +31,7 @@ const CELL_STYLE: Record<CellState, string> = {
     'bg-white border-2 border-orange-400 text-orange-600 dark:bg-transparent dark:border-orange-500 dark:text-orange-400',
   today:
     'bg-blue-50 border-2 border-blue-500 text-blue-700 font-semibold dark:bg-blue-950 dark:border-blue-400 dark:text-blue-300',
-  future: 'bg-gray-50 text-gray-300 dark:bg-gray-900 dark:text-gray-700',
+  future: 'bg-white border border-dashed border-gray-200 text-gray-300 dark:bg-transparent dark:border-gray-700 dark:text-gray-700',
 };
 
 const LEGEND: { state: CellState; label: string }[] = [

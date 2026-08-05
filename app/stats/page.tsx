@@ -45,7 +45,7 @@ export default function StatsPage() {
 
   if (!state) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400" />
       </div>
     );
@@ -61,7 +61,7 @@ export default function StatsPage() {
   const reviewRows = [...reviewRecords].sort((a, b) => b.takenAt.localeCompare(a.takenAt));
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-zinc-50 p-4 dark:bg-black">
+    <div className="flex flex-1 flex-col items-center bg-zinc-50 p-4 dark:bg-black">
       <div className="flex w-full max-w-xl flex-col gap-6 py-8">
         <h1 className="text-2xl font-bold">통계</h1>
 
@@ -141,7 +141,7 @@ function SummaryTile({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-gray-200 p-4 text-center dark:border-gray-800">
       <p className="mb-1 text-xs text-gray-400 dark:text-gray-500">{label}</p>
-      <p className="text-xl font-bold">{value}</p>
+      <p className="text-3xl font-bold">{value}</p>
     </div>
   );
 }

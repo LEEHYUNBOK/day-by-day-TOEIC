@@ -95,6 +95,17 @@ export default function SessionRunner({ day }: SessionRunnerProps) {
   const total = items.length;
   const current = phase === 'quiz' ? items[idx] : phase === 'retry' ? retryQueue[idx] : null;
 
+  // 상단 진행바: 각 단계의 진행률을 그대로 반영한다 (browse는 0%, quiz/재도전은 현재 문항
+  // 기준, 재도전 대기·완료는 본 학습이 끝났음을 나타내는 100%).
+  const progressPct =
+    phase === 'browse'
+      ? 0
+      : phase === 'quiz'
+        ? ((idx + 1) / total) * 100
+        : phase === 'retry' && retryStarted
+          ? ((idx + 1) / retryQueue.length) * 100
+          : 100;
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-zinc-50 p-4 dark:bg-black">
       <div className="flex w-full max-w-xl items-center justify-between py-4">
@@ -112,6 +123,12 @@ export default function SessionRunner({ day }: SessionRunnerProps) {
         >
           나가기
         </button>
+      </div>
+      <div className="mb-4 h-1 w-full max-w-xl rounded-full bg-gray-200 dark:bg-gray-800">
+        <div
+          className="h-1 rounded-full bg-blue-600 transition-all dark:bg-blue-400"
+          style={{ width: `${progressPct}%` }}
+        />
       </div>
 
       <div className="w-full max-w-xl flex-1">

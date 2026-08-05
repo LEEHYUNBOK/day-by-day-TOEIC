@@ -31,7 +31,7 @@ export default function HomePage() {
 
   if (!state) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400" />
       </div>
     );
@@ -53,7 +53,7 @@ export default function HomePage() {
     .sort((a, b) => b.date.localeCompare(a.date))[0];
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-zinc-50 p-4 dark:bg-black">
+    <div className="flex flex-1 flex-col items-center bg-zinc-50 p-4 dark:bg-black">
       <div className="flex w-full max-w-xl flex-col gap-6 py-8">
         <h1 className="text-2xl font-bold">홈</h1>
 
@@ -101,7 +101,15 @@ export default function HomePage() {
                 </Link>
               </>
             ) : (
-              <p className="text-sm text-gray-400 dark:text-gray-500">놓친 학습이 없어요</p>
+              <>
+                <p className="mb-4 text-sm text-gray-400 dark:text-gray-500">놓친 학습이 없어요</p>
+                <Link
+                  href="/review"
+                  className="flex min-h-14 w-full items-center justify-center rounded-lg bg-blue-600 text-lg font-semibold text-white hover:bg-blue-700"
+                >
+                  복습 시험 보기
+                </Link>
+              </>
             )}
           </div>
         )}
@@ -109,10 +117,10 @@ export default function HomePage() {
         <div className="flex items-center justify-between rounded-2xl border border-gray-200 p-6 dark:border-gray-800">
           <div>
             <p className="text-sm text-gray-400 dark:text-gray-500">연속 학습</p>
-            <p className="text-3xl font-bold">🔥 {streak}일 연속</p>
+            <p className="text-3xl font-bold">🔥 {streak}일</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-400 dark:text-gray-500">누적 완료</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500">완료일</p>
             <p className="text-3xl font-bold">{doneCount}일</p>
           </div>
         </div>
