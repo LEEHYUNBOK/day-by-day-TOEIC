@@ -1,0 +1,23 @@
+{
+  "date": "2026-08-07",
+  "title": "Day 4 — 마케팅과 홍보",
+  "words": [
+    { "id": "w-advertisement", "word": "advertisement", "pos": "n.", "meaning": "광고", "example": "The advertisement will appear in three magazines.", "exampleKo": "그 광고는 세 개 잡지에 실릴 것이다." },
+    { "id": "w-launch", "word": "launch", "pos": "n.", "meaning": "출시(하다)", "example": "The launch of the new model went smoothly.", "exampleKo": "신모델 출시는 순조롭게 진행되었다." },
+    { "id": "w-brochure", "word": "brochure", "pos": "n.", "meaning": "안내 책자", "example": "We printed two thousand copies of the brochure.", "exampleKo": "우리는 안내 책자를 2천 부 인쇄했다." },
+    { "id": "w-publicity", "word": "publicity", "pos": "n.", "meaning": "홍보", "example": "The event generated a lot of free publicity.", "exampleKo": "그 행사는 많은 무료 홍보 효과를 낳았다." },
+    { "id": "w-survey", "word": "survey", "pos": "n.", "meaning": "설문 조사", "example": "The survey showed that most customers were satisfied.", "exampleKo": "설문 조사 결과 대부분의 고객이 만족한 것으로 나타났다." },
+    { "id": "w-target", "word": "target", "pos": "n.", "meaning": "목표(로 삼다)", "example": "The team met its sales target for June.", "exampleKo": "그 팀은 6월 판매 목표를 달성했다." },
+    { "id": "w-strategy", "word": "strategy", "pos": "n.", "meaning": "전략", "example": "The new pricing strategy attracted many customers.", "exampleKo": "새로운 가격 전략은 많은 고객을 끌어들였다." },
+    { "id": "w-audience", "word": "audience", "pos": "n.", "meaning": "청중, 대상", "example": "The advertisement reached a much younger audience.", "exampleKo": "그 광고는 훨씬 젊은 층에 도달했다." },
+    { "id": "w-feedback", "word": "feedback", "pos": "n.", "meaning": "피드백", "example": "Customer feedback helped us improve the design.", "exampleKo": "고객 피드백은 우리가 디자인을 개선하는 데 도움이 되었다." },
+    { "id": "w-campaign", "word": "campaign", "pos": "n.", "meaning": "캠페인", "example": "The campaign runs from June through August.", "exampleKo": "그 캠페인은 6월부터 8월까지 진행된다." }
+  ],
+  "sentences": [
+    { "id": "s-0807-1", "text": "The product launch was delayed by two weeks.", "ko": "제품 출시가 2주 연기되었다.", "blankWord": "launch", "distractors": ["lunch", "lounge", "ledger"] },
+    { "id": "s-0807-2", "text": "Our team distributed the new brochure at the trade show.", "ko": "우리 팀은 무역 박람회에서 새 안내 책자를 배포했다.", "blankWord": "brochure", "distractors": ["brokerage", "blockage", "breakage"] },
+    { "id": "s-0807-3", "text": "Customers who complete the survey will receive a discount coupon.", "ko": "설문 조사를 완료한 고객은 할인 쿠폰을 받게 된다.", "blankWord": "survey", "distractors": ["surplus", "supply", "subsidy"] },
+    { "id": "s-0807-4", "text": "The advertising campaign increased sales by fifteen percent last month.", "ko": "그 광고 캠페인은 지난달 매출을 15퍼센트 늘렸다.", "blankWord": "campaign", "distractors": ["champion", "companion", "complaint"] },
+    { "id": "s-0807-5", "text": "Please send us your feedback after using the trial version.", "ko": "체험판을 사용해 보신 후 의견을 보내 주세요.", "blankWord": "feedback", "distractors": ["drawback", "setback", "playback"] }
+  ]
+}
