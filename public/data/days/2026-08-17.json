@@ -17,7 +17,7 @@
     { "id": "s-0817-1", "text": "Supervisors evaluate each intern's progress at the end of the term.", "ko": "관리자들은 학기 말에 각 인턴의 진행 상황을 평가한다.", "blankWord": "evaluate", "distractors": ["evacuate", "eliminate", "educate"] },
     { "id": "s-0817-2", "text": "The department managed to achieve its sales goal early.", "ko": "그 부서는 일찍 판매 목표를 달성해 냈다.", "blankWord": "achieve", "distractors": ["believe", "relieve", "retrieve"] },
     { "id": "s-0817-3", "text": "She earned an outstanding performance review this year.", "ko": "그녀는 올해 뛰어난 인사평가를 받았다.", "blankWord": "outstanding", "distractors": ["outgoing", "outdated", "outspoken"] },
-    { "id": "s-0817-4", "text": "Sales figures often exceed projections during the holiday season.", "ko": "매출 수치는 성수기 동안 종종 예상치를 초과한다.", "blankWord": "exceed", "distractors": ["excel", "exert", "recede"] },
+    { "id": "s-0817-4", "text": "Sales figures often exceed projections during the holiday season.", "ko": "매출 수치는 연휴 기간 동안 종종 예상치를 초과한다.", "blankWord": "exceed", "distractors": ["excel", "exert", "recede"] },
     { "id": "s-0817-5", "text": "Launching the app was a major milestone for the startup.", "ko": "그 앱 출시는 스타트업에게 중요한 이정표였다.", "blankWord": "milestone", "distractors": ["gemstone", "limestone", "cobblestone"] }
   ]
 }

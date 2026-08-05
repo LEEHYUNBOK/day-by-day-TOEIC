@@ -15,7 +15,7 @@
   ],
   "sentences": [
     { "id": "s-0812-1", "text": "This plant will manufacture car parts for export.", "ko": "이 공장은 수출용 자동차 부품을 제조할 것이다.", "blankWord": "manufacture", "distractors": ["manipulate", "maintain", "manage"] },
-    { "id": "s-0812-2", "text": "The delayed shipment finally arrived at the warehouse this morning.", "ko": "지연된 배송품이 오늘 아침 마침내 창고에 도착했다.", "blankWord": "shipment", "distractors": ["requirement", "agreement", "achievement"] },
+    { "id": "s-0812-2", "text": "The delayed shipment finally arrived at the loading dock.", "ko": "지연된 배송품이 마침내 하역장에 도착했다.", "blankWord": "shipment", "distractors": ["requirement", "agreement", "achievement"] },
     { "id": "s-0812-3", "text": "We negotiated better prices with our main supplier.", "ko": "우리는 주요 공급업체와 더 나은 가격을 협상했다.", "blankWord": "supplier", "distractors": ["supplement", "supervisor", "supporter"] },
     { "id": "s-0812-4", "text": "Customers may return any defective item within thirty days.", "ko": "고객은 결함이 있는 제품을 30일 이내에 반품할 수 있다.", "blankWord": "defective", "distractors": ["objective", "selective", "effective"] },
     { "id": "s-0812-5", "text": "The plant added a second assembly line to increase output.", "ko": "그 공장은 생산량을 늘리기 위해 두 번째 조립 라인을 추가했다.", "blankWord": "assembly", "distractors": ["assessment", "assortment", "assignment"] }

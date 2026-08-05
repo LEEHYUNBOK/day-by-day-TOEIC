@@ -15,9 +15,9 @@
   ],
   "sentences": [
     { "id": "s-0808-1", "text": "The marketing team stayed within its budget for the entire quarter.", "ko": "마케팅팀은 분기 내내 예산 범위 안에서 지출했다.", "blankWord": "budget", "distractors": ["deficit", "ledger", "surplus"] },
-    { "id": "s-0808-2", "text": "The invoice included a detailed list of billable hours.", "ko": "청구서에는 청구 가능한 근무 시간의 상세 목록이 포함되어 있었다.", "blankWord": "invoice", "distractors": ["advice", "device", "voice"] },
-    { "id": "s-0808-3", "text": "Total revenue increased by twelve percent this quarter.", "ko": "이번 분기 총 수익이 12퍼센트 증가했다.", "blankWord": "revenue", "distractors": ["avenue", "reverence", "residence"] },
+    { "id": "s-0808-2", "text": "The invoice included a detailed list of billable hours.", "ko": "청구서에는 청구 가능한 근무 시간의 상세 목록이 포함되어 있었다.", "blankWord": "invoice", "distractors": ["choice", "device", "voice"] },
+    { "id": "s-0808-3", "text": "Total revenue increased by more than twelve percent.", "ko": "총 수익이 12퍼센트 넘게 증가했다.", "blankWord": "revenue", "distractors": ["avenue", "reverence", "residence"] },
     { "id": "s-0808-4", "text": "The annual audit revealed several minor accounting errors in July.", "ko": "연례 회계 감사에서 7월에 몇 가지 사소한 회계 오류가 발견되었다.", "blankWord": "audit", "distractors": ["audition", "edition", "addition"] },
-    { "id": "s-0808-5", "text": "The company will reimburse employees for approved travel expenses next week.", "ko": "회사는 다음 주에 승인된 출장 경비를 직원들에게 상환할 것이다.", "blankWord": "reimburse", "distractors": ["reinforce", "reimpose", "rehearse"] }
+    { "id": "s-0808-5", "text": "The company will reimburse employees for approved travel expenses.", "ko": "회사는 승인된 출장 경비를 직원들에게 상환할 것이다.", "blankWord": "reimburse", "distractors": ["reinforce", "reimpose", "rehearse"] }
   ]
 }

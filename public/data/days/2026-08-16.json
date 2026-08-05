@@ -14,8 +14,8 @@
     { "id": "w-session", "word": "session", "pos": "n.", "meaning": "세션, 시간", "example": "The afternoon session covered marketing strategy in detail.", "exampleKo": "오후 세션은 마케팅 전략을 자세히 다뤘다." }
   ],
   "sentences": [
-    { "id": "s-0816-1", "text": "Attendees must register at the front desk before nine.", "ko": "참석자는 9시 전에 안내 데스크에서 등록해야 한다.", "blankWord": "register", "distractors": ["regret", "regard", "regulate"] },
-    { "id": "s-0816-2", "text": "The closing banquet will begin promptly at seven o'clock.", "ko": "폐회 연회는 오후 7시 정각에 시작될 것이다.", "blankWord": "banquet", "distractors": ["blanket", "bankrupt", "banner"] },
+    { "id": "s-0816-1", "text": "All conference attendees must register at the front desk.", "ko": "모든 학회 참석자는 안내 데스크에서 등록해야 한다.", "blankWord": "register", "distractors": ["regret", "regard", "regulate"] },
+    { "id": "s-0816-2", "text": "The closing banquet will begin at seven o'clock.", "ko": "폐회 연회는 7시에 시작될 것이다.", "blankWord": "banquet", "distractors": ["blanket", "bankrupt", "banner"] },
     { "id": "s-0816-3", "text": "The keynote speaker discussed emerging market trends in Asia.", "ko": "기조연설자는 아시아의 신흥 시장 동향에 대해 이야기했다.", "blankWord": "keynote", "distractors": ["keystone", "keepsake", "keyboard"] },
     { "id": "s-0816-4", "text": "The organizers changed the venue just two days before the event.", "ko": "주최 측은 행사 이틀 전에 행사장을 변경했다.", "blankWord": "venue", "distractors": ["avenue", "revenue", "venture"] },
     { "id": "s-0816-5", "text": "A major bank agreed to sponsor next year's marathon.", "ko": "한 대형 은행이 내년 마라톤을 후원하기로 합의했다.", "blankWord": "sponsor", "distractors": ["sponge", "spawn", "respond"] }

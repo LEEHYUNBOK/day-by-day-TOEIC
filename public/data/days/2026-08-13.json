@@ -15,8 +15,8 @@
   ],
   "sentences": [
     { "id": "s-0813-1", "text": "All employees must comply with the new dress code.", "ko": "모든 직원은 새 복장 규정을 준수해야 한다.", "blankWord": "comply", "distractors": ["comprise", "compile", "compete"] },
-    { "id": "s-0813-2", "text": "The construction crew needs a permit before starting work.", "ko": "건설팀은 작업을 시작하기 전에 허가증이 필요하다.", "blankWord": "permit", "distractors": ["permission", "summit", "comment"] },
-    { "id": "s-0813-3", "text": "Employees must keep all client records strictly confidential.", "ko": "직원들은 모든 고객 기록을 철저히 기밀로 유지해야 한다.", "blankWord": "confidential", "distractors": ["confident", "influential", "potential"] },
+    { "id": "s-0813-2", "text": "The construction crew needs a permit before starting work.", "ko": "건설팀은 작업을 시작하기 전에 허가증이 필요하다.", "blankWord": "permit", "distractors": ["permission", "summit", "perjury"] },
+    { "id": "s-0813-3", "text": "All client records must remain confidential at all times.", "ko": "모든 고객 기록은 항상 기밀로 유지되어야 한다.", "blankWord": "confidential", "distractors": ["confident", "influential", "potential"] },
     { "id": "s-0813-4", "text": "The inspector documented each safety violation in detail.", "ko": "조사관은 각 안전 위반 사항을 상세히 기록했다.", "blankWord": "violation", "distractors": ["violin", "donation", "ovation"] },
     { "id": "s-0813-5", "text": "Safety officers will inspect the site before construction begins.", "ko": "안전 담당자들은 공사가 시작되기 전에 현장을 점검할 것이다.", "blankWord": "inspect", "distractors": ["inspire", "install", "inhibit"] }
   ]

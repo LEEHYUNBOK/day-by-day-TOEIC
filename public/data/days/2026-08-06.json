@@ -16,7 +16,7 @@
   "sentences": [
     { "id": "s-0806-1", "text": "Every applicant must submit a detailed resume by Friday.", "ko": "모든 지원자는 금요일까지 상세한 이력서를 제출해야 한다.", "blankWord": "applicant", "distractors": ["application", "appliance", "applause"] },
     { "id": "s-0806-2", "text": "The company decided to promote her to regional manager.", "ko": "회사는 그녀를 지역 관리자로 승진시키기로 결정했다.", "blankWord": "promote", "distractors": ["promise", "prolong", "prohibit"] },
-    { "id": "s-0806-3", "text": "The starting salary depends mainly on relevant work experience.", "ko": "초봉은 주로 관련 실무 경험에 따라 결정된다.", "blankWord": "salary", "distractors": ["summary", "surplus", "signature"] },
+    { "id": "s-0806-3", "text": "The starting salary depends on relevant work experience.", "ko": "초봉은 관련 실무 경험에 따라 결정된다.", "blankWord": "salary", "distractors": ["summary", "surplus", "signature"] },
     { "id": "s-0806-4", "text": "Full-time staff receive generous benefits including health insurance.", "ko": "정규직 직원은 건강 보험을 포함한 넉넉한 복리후생을 받는다.", "blankWord": "benefits", "distractors": ["briefings", "belongings", "beneficiaries"] },
     { "id": "s-0806-5", "text": "The department has a vacancy for a senior analyst.", "ko": "그 부서에는 선임 분석가 자리가 하나 비어 있다.", "blankWord": "vacancy", "distractors": ["vacation", "validity", "variance"] }
   ]

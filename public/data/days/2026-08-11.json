@@ -16,8 +16,8 @@
   "sentences": [
     { "id": "s-0811-1", "text": "The store received a formal complaint about late delivery.", "ko": "매장은 배송 지연에 대한 정식 불만을 접수했다.", "blankWord": "complaint", "distractors": ["compliment", "complement", "component"] },
     { "id": "s-0811-2", "text": "The receptionist answered every customer inquiry with great patience.", "ko": "안내 직원은 모든 고객 문의에 큰 인내심을 갖고 응대했다.", "blankWord": "inquiry", "distractors": ["injury", "inquest", "inventory"] },
-    { "id": "s-0811-3", "text": "Agents must respond to every customer email promptly.", "ko": "상담원은 모든 고객 이메일에 신속히 응답해야 한다.", "blankWord": "respond", "distractors": ["reserve", "resign", "restore"] },
+    { "id": "s-0811-3", "text": "Agents must respond to every customer email within one business day.", "ko": "상담원은 영업일 기준 하루 이내에 모든 고객 이메일에 응답해야 한다.", "blankWord": "respond", "distractors": ["reserve", "resign", "restore"] },
     { "id": "s-0811-4", "text": "This warranty does not cover accidental damage caused by misuse.", "ko": "이 보증서는 오용으로 인한 우발적 손상은 보장하지 않는다.", "blankWord": "warranty", "distractors": ["warrant", "warfare", "warmth"] },
-    { "id": "s-0811-5", "text": "Our team aims to resolve every complaint within two days.", "ko": "우리 팀은 이틀 이내에 모든 불만을 해결하는 것을 목표로 한다.", "blankWord": "resolve", "distractors": ["revolve", "reveal", "revoke"] }
+    { "id": "s-0811-5", "text": "Our team aims to resolve every complaint within two days.", "ko": "우리 팀은 이틀 이내에 모든 불만을 해결하는 것을 목표로 한다.", "blankWord": "resolve", "distractors": ["revolve", "repeal", "revoke"] }
   ]
 }

@@ -3,7 +3,7 @@
   "title": "Day 11 — IT와 기술",
   "words": [
     { "id": "w-install", "word": "install", "pos": "v.", "meaning": "설치하다", "example": "The IT team will install new software this weekend.", "exampleKo": "IT팀은 이번 주말에 새 소프트웨어를 설치할 것이다." },
-    { "id": "w-upgrade", "word": "upgrade", "pos": "n.", "meaning": "업그레이드(하다)", "example": "The company plans to upgrade all office computers.", "exampleKo": "회사는 모든 사무실 컴퓨터를 업그레이드할 계획이다." },
+    { "id": "w-upgrade", "word": "upgrade", "pos": "v.", "meaning": "업그레이드(하다)", "example": "The company plans to upgrade all office computers.", "exampleKo": "회사는 모든 사무실 컴퓨터를 업그레이드할 계획이다." },
     { "id": "w-malfunction", "word": "malfunction", "pos": "n.", "meaning": "오작동(하다)", "example": "A sudden malfunction shut down the entire server.", "exampleKo": "갑작스러운 오작동으로 서버 전체가 다운되었다." },
     { "id": "w-technician", "word": "technician", "pos": "n.", "meaning": "기술자", "example": "A technician arrived to fix the printer.", "exampleKo": "기술자가 프린터를 고치러 왔다." },
     { "id": "w-maintenance", "word": "maintenance", "pos": "n.", "meaning": "유지 보수", "example": "Routine maintenance is scheduled for every Friday night.", "exampleKo": "정기 유지 보수는 매주 금요일 밤으로 예정되어 있다." },
@@ -18,6 +18,6 @@
     { "id": "s-0814-2", "text": "A minor malfunction delayed the production line yesterday.", "ko": "사소한 오작동으로 어제 생산 라인이 지연되었다.", "blankWord": "malfunction", "distractors": ["malnutrition", "malpractice", "fraction"] },
     { "id": "s-0814-3", "text": "A certified technician repaired the broken elevator yesterday.", "ko": "자격을 갖춘 기술자가 어제 고장 난 엘리베이터를 수리했다.", "blankWord": "technician", "distractors": ["technique", "technology", "technicality"] },
     { "id": "s-0814-4", "text": "The IT staff created a backup of the entire database last night.", "ko": "IT 직원들은 어젯밤 전체 데이터베이스의 백업을 만들었다.", "blankWord": "backup", "distractors": ["backdrop", "backlog", "background"] },
-    { "id": "s-0814-5", "text": "The company's network crashed during the software update.", "ko": "회사 네트워크가 소프트웨어 업데이트 중에 다운되었다.", "blankWord": "network", "distractors": ["narrative", "notion", "novelty"] }
+    { "id": "s-0814-5", "text": "The company's network crashed during the software update.", "ko": "회사 네트워크가 소프트웨어 업데이트 중에 다운되었다.", "blankWord": "network", "distractors": ["homework", "artwork", "patchwork"] }
   ]
 }

@@ -17,7 +17,7 @@
     { "id": "s-0807-1", "text": "The product launch was delayed by two weeks.", "ko": "제품 출시가 2주 연기되었다.", "blankWord": "launch", "distractors": ["lunch", "lounge", "ledger"] },
     { "id": "s-0807-2", "text": "Our team distributed the new brochure at the trade show.", "ko": "우리 팀은 무역 박람회에서 새 안내 책자를 배포했다.", "blankWord": "brochure", "distractors": ["brokerage", "blockage", "breakage"] },
     { "id": "s-0807-3", "text": "Customers who complete the survey will receive a discount coupon.", "ko": "설문 조사를 완료한 고객은 할인 쿠폰을 받게 된다.", "blankWord": "survey", "distractors": ["surplus", "supply", "subsidy"] },
-    { "id": "s-0807-4", "text": "The advertising campaign increased sales by fifteen percent last month.", "ko": "그 광고 캠페인은 지난달 매출을 15퍼센트 늘렸다.", "blankWord": "campaign", "distractors": ["champion", "companion", "complaint"] },
+    { "id": "s-0807-4", "text": "The advertising campaign increased sales by fifteen percent.", "ko": "그 광고 캠페인은 매출을 15퍼센트 늘렸다.", "blankWord": "campaign", "distractors": ["campus", "companion", "complaint"] },
     { "id": "s-0807-5", "text": "Please send us your feedback after using the trial version.", "ko": "체험판을 사용해 보신 후 의견을 보내 주세요.", "blankWord": "feedback", "distractors": ["drawback", "setback", "playback"] }
   ]
 }

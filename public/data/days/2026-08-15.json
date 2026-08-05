@@ -15,7 +15,7 @@
   ],
   "sentences": [
     { "id": "s-0815-1", "text": "The tenant renewed the lease for another two years.", "ko": "세입자는 임대차 계약을 2년 더 갱신했다.", "blankWord": "lease", "distractors": ["leash", "release", "decrease"] },
-    { "id": "s-0815-2", "text": "The tenant complained loudly about the broken elevator today.", "ko": "세입자는 오늘 고장 난 엘리베이터에 대해 크게 항의했다.", "blankWord": "tenant", "distractors": ["tenet", "tent", "patent"] },
+    { "id": "s-0815-2", "text": "The tenant reported the broken elevator to building management.", "ko": "세입자는 고장 난 엘리베이터를 건물 관리팀에 신고했다.", "blankWord": "tenant", "distractors": ["tenet", "tent", "patent"] },
     { "id": "s-0815-3", "text": "The office renovation is expected to finish by June.", "ko": "사무실 보수 공사는 6월까지 끝날 것으로 예상된다.", "blankWord": "renovation", "distractors": ["innovation", "reservation", "reputation"] },
     { "id": "s-0815-4", "text": "The landlord repainted the hallway before the new tenant moved in.", "ko": "임대인은 새 세입자가 입주하기 전에 복도를 다시 칠했다.", "blankWord": "landlord", "distractors": ["landmark", "landscape", "landfill"] },
     { "id": "s-0815-5", "text": "The firm decided to relocate its warehouse closer to the port.", "ko": "그 회사는 창고를 항구에 더 가깝게 이전하기로 결정했다.", "blankWord": "relocate", "distractors": ["renovate", "reallocate", "relate"] }
