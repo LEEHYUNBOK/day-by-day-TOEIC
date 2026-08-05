@@ -14,10 +14,10 @@
     { "id": "w-finalize", "word": "finalize", "pos": "v.", "meaning": "마무리 짓다, 확정하다", "example": "We hope to finalize the deal this week.", "exampleKo": "이번 주에 거래를 확정하기를 바랍니다." }
   ],
   "sentences": [
-    { "id": "s-0804-1", "text": "The manager will negotiate the contract next week.", "ko": "매니저가 다음 주에 계약을 협상할 것이다.", "blankWord": "negotiate", "distractors": ["recruit", "renovate", "evaporate"] },
+    { "id": "s-0804-1", "text": "The manager will negotiate the contract next week.", "ko": "매니저가 다음 주에 계약을 협상할 것이다.", "blankWord": "negotiate", "distractors": ["recruit", "renovate", "relocate"] },
     { "id": "s-0804-2", "text": "Both companies signed the agreement after months of discussion.", "ko": "양사는 수개월의 논의 끝에 협정에 서명했다.", "blankWord": "agreement", "distractors": ["appliance", "attendance", "allowance"] },
-    { "id": "s-0804-3", "text": "Please revise the report before the deadline.", "ko": "마감 기한 전에 보고서를 수정해 주세요.", "blankWord": "revise", "distractors": ["reside", "resign", "rewind"] },
-    { "id": "s-0804-4", "text": "The new clause was added to protect confidential information.", "ko": "기밀 정보를 보호하기 위해 새 조항이 추가되었다.", "blankWord": "clause", "distractors": ["cause", "clamp", "closure"] },
-    { "id": "s-0804-5", "text": "We expect to finalize the terms by Friday.", "ko": "금요일까지 조건을 확정할 것으로 예상한다.", "blankWord": "finalize", "distractors": ["fertilize", "sterilize", "familiarize"] }
+    { "id": "s-0804-3", "text": "Please revise the report before the deadline.", "ko": "마감 기한 전에 보고서를 수정해 주세요.", "blankWord": "revise", "distractors": ["reside", "resign", "reverse"] },
+    { "id": "s-0804-4", "text": "The new clause was added to protect confidential information.", "ko": "기밀 정보를 보호하기 위해 새 조항이 추가되었다.", "blankWord": "clause", "distractors": ["cause", "claim", "closure"] },
+    { "id": "s-0804-5", "text": "We expect to finalize the terms by Friday.", "ko": "금요일까지 조건을 확정할 것으로 예상한다.", "blankWord": "finalize", "distractors": ["energize", "mobilize", "familiarize"] }
   ]
 }
