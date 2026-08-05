@@ -19,7 +19,11 @@ export interface DayRecord {
   scores: { word: number; blank: number; arrange: number }; // 0~100 정수
 }
 export interface WrongNote {
-  type: QuizType; itemId: string; date: string; wrongCount: number;
+  type: QuizType; itemId: string;
+  // itemId가 속한 콘텐츠(day)의 날짜. 틀린 날짜(실수한 날짜)가 아니다 — /notes와 /review가
+  // 이 값으로 dayContentByDate를 조회해 원문을 찾으므로, 항상 콘텐츠 포인터로 취급해야 한다.
+  date: string;
+  wrongCount: number;
 }
 export interface ReviewRecord {
   takenAt: string; // ISO

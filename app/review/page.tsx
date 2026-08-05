@@ -25,6 +25,7 @@ interface LoadedState {
   wrongNotes: WrongNote[];
   dayContentByDate: Map<string, DayContent | null>;
   fullWordPool: Word[];
+  sourceDateByItemId: Map<string, string>;
 }
 
 const SCOPE_LABEL: Record<Scope, string> = {
@@ -114,12 +115,22 @@ export default function ReviewPage() {
       if (cancelled) return;
       const dayContentByDate = new Map(index.map((d, i) => [d.date, contents[i]] as const));
       const fullWordPool = contents.flatMap((c) => c?.words ?? []);
+      // itemId -> 그 단어/문장이 실제로 속한 날짜. WrongNote.date는 실수한 날짜가 아니라
+      // "이 itemId를 /notes에서 찾을 때 봐야 할 콘텐츠 날짜"이므로 여기서 미리 만들어 둔다.
+      const sourceDateByItemId = new Map<string, string>();
+      contents.forEach((day, i) => {
+        if (!day) return;
+        const date = index[i].date;
+        day.words.forEach((w) => sourceDateByItemId.set(w.id, date));
+        day.sentences.forEach((s) => sourceDateByItemId.set(s.id, date));
+      });
       setState({
         index,
         records: getDayRecords(),
         wrongNotes: getWrongNotes(),
         dayContentByDate,
         fullWordPool,
+        sourceDateByItemId,
       });
     });
     return () => {
@@ -129,7 +140,7 @@ export default function ReviewPage() {
 
   if (!state) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400" />
       </div>
     );
@@ -146,7 +157,7 @@ export default function ReviewPage() {
   }
 
   function finish(finalLogs: ReviewLog[]) {
-    if (!scope) return;
+    if (!scope || !state) return;
     const correct = finalLogs.filter((l) => l.correct).length;
     addReviewRecord({ takenAt: new Date().toISOString(), scope, correct, total: finalLogs.length });
     const existingNotes = getWrongNotes();
@@ -155,7 +166,11 @@ export default function ReviewPage() {
       if (l.correct) {
         if (scope === 'wrong') resolveWrongNote(noteType, l.itemId);
       } else {
-        addWrongNote({ type: noteType, itemId: l.itemId, date: todayStr() });
+        // WrongNote.date는 이 itemId가 실제로 속한 콘텐츠 날짜여야 한다 (실수한 날짜가 아님).
+        // todayStr()를 쓰면 오늘 완료한 날짜의 콘텐츠에서 이 itemId를 찾지 못해 /notes가
+        // "삭제된 콘텐츠"로 표시하게 된다.
+        const sourceDate = state.sourceDateByItemId.get(l.itemId) ?? todayStr();
+        addWrongNote({ type: noteType, itemId: l.itemId, date: sourceDate });
       }
     });
     setState((prev) => (prev ? { ...prev, wrongNotes: getWrongNotes(), records: getDayRecords() } : prev));
@@ -183,7 +198,7 @@ export default function ReviewPage() {
 
   if (phase === 'scope') {
     return (
-      <div className="flex min-h-screen flex-col items-center bg-zinc-50 p-4 dark:bg-black">
+      <div className="flex flex-1 flex-col items-center bg-zinc-50 p-4 dark:bg-black">
         <div className="w-full max-w-xl py-8">
           <h1 className="mb-6 text-2xl font-bold">복습 시험</h1>
           <div className="flex flex-col gap-3">
@@ -226,7 +241,7 @@ export default function ReviewPage() {
     const total = items.length;
     const current = items[idx];
     return (
-      <div className="flex min-h-screen flex-col items-center bg-zinc-50 p-4 dark:bg-black">
+      <div className="flex flex-1 flex-col items-center bg-zinc-50 p-4 dark:bg-black">
         <div className="flex w-full max-w-xl items-center justify-between py-4">
           <span className="text-sm text-gray-400 dark:text-gray-500">
             {idx + 1} / {total}
@@ -242,7 +257,7 @@ export default function ReviewPage() {
         <div className="mb-4 h-1 w-full max-w-xl rounded-full bg-gray-200 dark:bg-gray-800">
           <div
             className="h-1 rounded-full bg-blue-600 transition-all dark:bg-blue-400"
-            style={{ width: `${(idx / total) * 100}%` }}
+            style={{ width: `${((idx + 1) / total) * 100}%` }}
           />
         </div>
         <div className="w-full max-w-xl flex-1">
@@ -276,7 +291,7 @@ export default function ReviewPage() {
     .filter((x) => !x.log.correct);
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-zinc-50 p-4 dark:bg-black">
+    <div className="flex flex-1 flex-col items-center bg-zinc-50 p-4 dark:bg-black">
       <div className="w-full max-w-xl py-8">
         <h1 className="mb-2 text-center text-2xl font-bold">복습 완료!</h1>
         <p className="mb-8 text-center text-5xl font-bold text-blue-600 dark:text-blue-400">

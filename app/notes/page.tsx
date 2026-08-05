@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { fetchIndex, fetchDay } from '@/lib/contentRepo';
 import { getWrongNotes, addWrongNote, resolveWrongNote } from '@/lib/progressRepo';
@@ -59,10 +59,24 @@ function buildRetryItem(
   return null;
 }
 
+interface ActiveRetry {
+  key: string;
+  entry: ResolvedEntry;
+  label: string;
+  item: WordQuizItem | BlankQuizItem | null;
+}
+
 export default function NotesPage() {
   const [state, setState] = useState<LoadedState | null>(null);
-  const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [active, setActive] = useState<ActiveRetry | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -80,7 +94,7 @@ export default function NotesPage() {
 
   if (!state) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400" />
       </div>
     );
@@ -103,15 +117,16 @@ export default function NotesPage() {
       addWrongNote({ type: entry.note.type, itemId: entry.note.itemId, date: entry.note.date });
       setFeedback(`${label} — 아직 오답노트에 남아있어요`);
     }
-    setActiveKey(null);
+    setActive(null);
     refreshNotes();
-    setTimeout(() => setFeedback(null), 2500);
+    if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+    feedbackTimeoutRef.current = setTimeout(() => setFeedback(null), 2500);
   }
 
   const entries = state.notes.map((note) => resolveEntry(note, state.dayContentByDate));
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-zinc-50 p-4 dark:bg-black">
+    <div className="flex flex-1 flex-col items-center bg-zinc-50 p-4 dark:bg-black">
       <div className="w-full max-w-xl py-8">
         <h1 className="mb-6 text-2xl font-bold">오답노트</h1>
 
@@ -130,7 +145,8 @@ export default function NotesPage() {
         <div className="flex flex-col gap-3">
           {entries.map((entry) => {
             const key = noteKey(entry.note);
-            const isActive = activeKey === key;
+            const activeForThis = active?.key === key ? active : null;
+            const isActive = activeForThis !== null;
             const label = entry.kind === 'word' ? entry.word.word : entry.kind === 'sentence' ? entry.text : '삭제된 콘텐츠';
 
             return (
@@ -165,7 +181,14 @@ export default function NotesPage() {
                       {!isActive && (
                         <button
                           type="button"
-                          onClick={() => setActiveKey(key)}
+                          onClick={() => {
+                            // 문항은 클릭 시 딱 한 번만 만들어 state에 고정한다. 렌더 중에 다시
+                            // 만들면 buildRetryItem 내부의 Math.random 때문에 재렌더될 때마다
+                            // 보기 구성이 달라지고, QuizCard의 selected 인덱스는 그대로 남아
+                            // 엉뚱한 보기를 정답/오답으로 재판정하게 된다.
+                            const item = buildRetryItem(entry, state.dayContentByDate, state.fullWordPool);
+                            setActive({ key, entry, label, item });
+                          }}
                           className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700"
                         >
                           다시 풀기
@@ -173,28 +196,20 @@ export default function NotesPage() {
                       )}
                     </div>
 
-                    {isActive &&
-                      (() => {
-                        const item = buildRetryItem(entry, state.dayContentByDate, state.fullWordPool);
-                        if (!item) {
-                          return (
-                            <p className="mt-3 text-sm text-gray-400 dark:text-gray-500">문항을 만들 수 없어요</p>
-                          );
-                        }
-                        const prompt = item.type === 'word' ? item.word.word : item.blankedText;
-                        const subPrompt = item.type === 'word' ? item.word.pos : undefined;
-                        return (
-                          <div className="mt-4">
-                            <QuizCard
-                              key={key}
-                              prompt={prompt}
-                              subPrompt={subPrompt}
-                              choices={item.choices}
-                              onNext={(correct) => handleRetryAnswer(entry, correct, label)}
-                            />
-                          </div>
-                        );
-                      })()}
+                    {activeForThis &&
+                      (activeForThis.item ? (
+                        <div className="mt-4">
+                          <QuizCard
+                            key={key}
+                            prompt={activeForThis.item.type === 'word' ? activeForThis.item.word.word : activeForThis.item.blankedText}
+                            subPrompt={activeForThis.item.type === 'word' ? activeForThis.item.word.pos : undefined}
+                            choices={activeForThis.item.choices}
+                            onNext={(correct) => handleRetryAnswer(entry, correct, label)}
+                          />
+                        </div>
+                      ) : (
+                        <p className="mt-3 text-sm text-gray-400 dark:text-gray-500">문항을 만들 수 없어요</p>
+                      ))}
                   </>
                 )}
               </div>
