@@ -1,0 +1,23 @@
+{
+  "date": "2026-08-04",
+  "title": "Day 1 — 계약과 협상",
+  "words": [
+    { "id": "w-negotiate", "word": "negotiate", "pos": "v.", "meaning": "협상하다", "example": "We need to negotiate the terms of the contract.", "exampleKo": "우리는 계약 조건을 협상해야 한다." },
+    { "id": "w-contract", "word": "contract", "pos": "n.", "meaning": "계약(서)", "example": "Please review the contract before signing it.", "exampleKo": "서명하기 전에 계약서를 검토해 주세요." },
+    { "id": "w-agreement", "word": "agreement", "pos": "n.", "meaning": "합의, 협정", "example": "Both parties reached an agreement on the price.", "exampleKo": "양측은 가격에 대해 합의에 도달했다." },
+    { "id": "w-terms", "word": "terms", "pos": "n.", "meaning": "(계약) 조건", "example": "The terms of the deal are favorable to us.", "exampleKo": "그 거래의 조건은 우리에게 유리하다." },
+    { "id": "w-revise", "word": "revise", "pos": "v.", "meaning": "수정하다", "example": "We will revise the proposal by Friday.", "exampleKo": "금요일까지 제안서를 수정하겠습니다." },
+    { "id": "w-deadline", "word": "deadline", "pos": "n.", "meaning": "마감 기한", "example": "The deadline for submission is next Monday.", "exampleKo": "제출 마감 기한은 다음 주 월요일이다." },
+    { "id": "w-propose", "word": "propose", "pos": "v.", "meaning": "제안하다", "example": "I propose that we extend the schedule.", "exampleKo": "일정을 연장할 것을 제안합니다." },
+    { "id": "w-clause", "word": "clause", "pos": "n.", "meaning": "조항", "example": "The confidentiality clause protects both companies.", "exampleKo": "비밀 유지 조항은 양사를 보호한다." },
+    { "id": "w-mutual", "word": "mutual", "pos": "adj.", "meaning": "상호의", "example": "The partnership is based on mutual trust.", "exampleKo": "그 파트너십은 상호 신뢰에 기반한다." },
+    { "id": "w-finalize", "word": "finalize", "pos": "v.", "meaning": "마무리 짓다, 확정하다", "example": "We hope to finalize the deal this week.", "exampleKo": "이번 주에 거래를 확정하기를 바랍니다." }
+  ],
+  "sentences": [
+    { "id": "s-0804-1", "text": "The manager will negotiate the contract next week.", "ko": "매니저가 다음 주에 계약을 협상할 것이다.", "blankWord": "negotiate", "distractors": ["postpone", "estimate", "submit"] },
+    { "id": "s-0804-2", "text": "Both companies signed the agreement after months of discussion.", "ko": "양사는 수개월의 논의 끝에 협정에 서명했다.", "blankWord": "agreement", "distractors": ["appliance", "attendance", "allowance"] },
+    { "id": "s-0804-3", "text": "Please revise the report before the deadline.", "ko": "마감 기한 전에 보고서를 수정해 주세요.", "blankWord": "revise", "distractors": ["reside", "resign", "remove"] },
+    { "id": "s-0804-4", "text": "The new clause was added to protect confidential information.", "ko": "기밀 정보를 보호하기 위해 새 조항이 추가되었다.", "blankWord": "clause", "distractors": ["cause", "course", "closure"] },
+    { "id": "s-0804-5", "text": "We expect to finalize the terms by Friday.", "ko": "금요일까지 조건을 확정할 것으로 예상한다.", "blankWord": "finalize", "distractors": ["fertilize", "formalize", "familiarize"] }
+  ]
+}
