@@ -82,15 +82,20 @@ function labelOf(item: QuizItem): string {
   return item.type === 'word' ? item.word.word : item.sentence.text;
 }
 
-// 문항이 오답노트에 이미 올라와 있는 항목이면 그 노트의 원래 type(들)을 그대로 쓴다.
-// buildBlankQuiz는 항상 type:'blank'로 문항을 만들지만, 그 문장이 실제로는 'arrange'(문장 조합)
-// 오답으로 기록되어 있을 수도 있으므로, 퀴즈 문항의 type이 아니라 노트 저장소의 type을 기준으로
-// resolveWrongNote/addWrongNote를 호출해야 같은 항목이 중복 행으로 쌓이지 않는다.
-// 아직 노트가 없는 항목(신규 오답)은 이번에 실제로 푼 문항 형식(item.type)을 그대로 쓴다.
-function originNoteTypes(item: QuizItem, existingNotes: WrongNote[]): QuizType[] {
-  if (item.type === 'word') return ['word'];
+// 이 문항에 대해 resolveWrongNote/addWrongNote를 호출할 때 써야 할 "단 하나의" type을 고른다.
+// buildBlankQuiz는 항상 type:'blank'로 문항을 만들지만, 그 문장은 실제로 'blank'·'arrange' 두
+// 노트를 동시에 가지고 있을 수 있다(같은 문장을 다른 날 두 형식 모두에서 틀린 경우). 이번에 실제로
+// 물어본 형식과 무관한 노트까지 같이 지우거나 횟수를 올리면 안 되므로, 정확히 하나만 고른다:
+//   1) 지금 낸 문항 형식(item.type)과 같은 type의 노트가 있으면 그것.
+//   2) 없고 단 하나의 노트만 있으면 그것(이번 문항이 그 노트의 유일한 근거이므로).
+//   3) 노트가 아예 없으면(신규 오답, recent7/all에서만 가능) 지금 낸 문항 형식을 그대로 쓴다.
+function originNoteType(item: QuizItem, existingNotes: WrongNote[]): QuizType {
+  if (item.type === 'word') return 'word';
   const matches = existingNotes.filter((n) => n.itemId === item.itemId && n.type !== 'word');
-  return matches.length > 0 ? matches.map((n) => n.type) : [item.type];
+  const exact = matches.find((n) => n.type === item.type);
+  if (exact) return exact.type;
+  if (matches.length === 1) return matches[0].type;
+  return item.type;
 }
 
 export default function ReviewPage() {
@@ -146,11 +151,11 @@ export default function ReviewPage() {
     addReviewRecord({ takenAt: new Date().toISOString(), scope, correct, total: finalLogs.length });
     const existingNotes = getWrongNotes();
     finalLogs.forEach((l, i) => {
-      const noteTypes = originNoteTypes(items[i], existingNotes);
+      const noteType = originNoteType(items[i], existingNotes);
       if (l.correct) {
-        if (scope === 'wrong') noteTypes.forEach((t) => resolveWrongNote(t, l.itemId));
+        if (scope === 'wrong') resolveWrongNote(noteType, l.itemId);
       } else {
-        noteTypes.forEach((t) => addWrongNote({ type: t, itemId: l.itemId, date: todayStr() }));
+        addWrongNote({ type: noteType, itemId: l.itemId, date: todayStr() });
       }
     });
     setState((prev) => (prev ? { ...prev, wrongNotes: getWrongNotes(), records: getDayRecords() } : prev));
