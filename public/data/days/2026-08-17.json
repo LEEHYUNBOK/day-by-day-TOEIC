@@ -1,0 +1,23 @@
+{
+  "date": "2026-08-17",
+  "title": "Day 14 — 성과와 평가",
+  "words": [
+    { "id": "w-evaluate", "word": "evaluate", "pos": "v.", "meaning": "평가하다", "example": "Managers evaluate staff performance twice a year.", "exampleKo": "관리자들은 직원 성과를 1년에 두 번 평가한다." },
+    { "id": "w-performance", "word": "performance", "pos": "n.", "meaning": "성과, 실적", "example": "Her performance improved significantly after the training.", "exampleKo": "훈련 이후 그녀의 성과는 크게 향상되었다." },
+    { "id": "w-achieve", "word": "achieve", "pos": "v.", "meaning": "달성하다", "example": "The team worked hard to achieve its annual target.", "exampleKo": "그 팀은 연간 목표를 달성하기 위해 열심히 일했다." },
+    { "id": "w-objective", "word": "objective", "pos": "n.", "meaning": "목표", "example": "Our main objective this quarter is customer retention.", "exampleKo": "이번 분기 우리의 주요 목표는 고객 유지이다." },
+    { "id": "w-outstanding", "word": "outstanding", "pos": "adj.", "meaning": "뛰어난", "example": "She received an award for her outstanding contribution.", "exampleKo": "그녀는 뛰어난 기여로 상을 받았다." },
+    { "id": "w-productivity", "word": "productivity", "pos": "n.", "meaning": "생산성", "example": "The new tools boosted overall team productivity.", "exampleKo": "새 도구들은 팀 전체의 생산성을 높였다." },
+    { "id": "w-appraisal", "word": "appraisal", "pos": "n.", "meaning": "평가", "example": "The annual appraisal determines each employee's bonus.", "exampleKo": "연례 평가는 각 직원의 상여금을 결정한다." },
+    { "id": "w-exceed", "word": "exceed", "pos": "v.", "meaning": "초과하다", "example": "The results exceeded everyone's expectations this year.", "exampleKo": "그 결과는 올해 모두의 기대를 초과했다." },
+    { "id": "w-milestone", "word": "milestone", "pos": "n.", "meaning": "중요 단계", "example": "Reaching one million users was a major milestone.", "exampleKo": "사용자 100만 명 달성은 중요한 이정표였다." },
+    { "id": "w-recognition", "word": "recognition", "pos": "n.", "meaning": "인정", "example": "He finally received recognition for his years of hard work.", "exampleKo": "그는 마침내 수년간의 노고를 인정받았다." }
+  ],
+  "sentences": [
+    { "id": "s-0817-1", "text": "Supervisors evaluate each intern's progress at the end of the term.", "ko": "관리자들은 학기 말에 각 인턴의 진행 상황을 평가한다.", "blankWord": "evaluate", "distractors": ["evacuate", "eliminate", "educate"] },
+    { "id": "s-0817-2", "text": "The department managed to achieve its sales goal early.", "ko": "그 부서는 일찍 판매 목표를 달성해 냈다.", "blankWord": "achieve", "distractors": ["believe", "relieve", "retrieve"] },
+    { "id": "s-0817-3", "text": "She earned an outstanding performance review this year.", "ko": "그녀는 올해 뛰어난 인사평가를 받았다.", "blankWord": "outstanding", "distractors": ["outgoing", "outdated", "outspoken"] },
+    { "id": "s-0817-4", "text": "Sales figures often exceed projections during the holiday season.", "ko": "매출 수치는 성수기 동안 종종 예상치를 초과한다.", "blankWord": "exceed", "distractors": ["excel", "exert", "recede"] },
+    { "id": "s-0817-5", "text": "Launching the app was a major milestone for the startup.", "ko": "그 앱 출시는 스타트업에게 중요한 이정표였다.", "blankWord": "milestone", "distractors": ["gemstone", "limestone", "cobblestone"] }
+  ]
+}

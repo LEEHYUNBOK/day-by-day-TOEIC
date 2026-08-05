@@ -1,0 +1,23 @@
+{
+  "date": "2026-08-15",
+  "title": "Day 12 — 부동산과 시설",
+  "words": [
+    { "id": "w-lease", "word": "lease", "pos": "n.", "meaning": "임대차 계약", "example": "The company signed a five-year lease for the office.", "exampleKo": "그 회사는 사무실에 대해 5년 임대차 계약을 체결했다." },
+    { "id": "w-tenant", "word": "tenant", "pos": "n.", "meaning": "세입자", "example": "The tenant reported a leaking faucet in the kitchen.", "exampleKo": "세입자는 주방의 수도꼭지 누수를 신고했다." },
+    { "id": "w-property", "word": "property", "pos": "n.", "meaning": "부동산, 자산", "example": "The firm purchased a small property downtown last year.", "exampleKo": "그 회사는 작년에 시내에 작은 부동산을 매입했다." },
+    { "id": "w-renovation", "word": "renovation", "pos": "n.", "meaning": "개조, 보수", "example": "The building underwent a major renovation last spring.", "exampleKo": "그 건물은 지난봄에 대대적인 보수 공사를 거쳤다." },
+    { "id": "w-facility", "word": "facility", "pos": "n.", "meaning": "시설", "example": "The new facility includes a large training room.", "exampleKo": "새 시설에는 넓은 교육실이 포함되어 있다." },
+    { "id": "w-utility", "word": "utility", "pos": "n.", "meaning": "공과금, 설비", "example": "Utility costs rose sharply during the winter months.", "exampleKo": "공과금은 겨울철 동안 급격히 올랐다." },
+    { "id": "w-landlord", "word": "landlord", "pos": "n.", "meaning": "임대인", "example": "The landlord agreed to repaint the walls before move-in.", "exampleKo": "임대인은 입주 전에 벽을 다시 칠하는 데 동의했다." },
+    { "id": "w-relocate", "word": "relocate", "pos": "v.", "meaning": "이전하다", "example": "The headquarters will relocate to a bigger city next year.", "exampleKo": "본사는 내년에 더 큰 도시로 이전할 것이다." },
+    { "id": "w-spacious", "word": "spacious", "pos": "adj.", "meaning": "넓은", "example": "The new office has a spacious lobby for visitors.", "exampleKo": "새 사무실에는 방문객을 위한 넓은 로비가 있다." },
+    { "id": "w-premises", "word": "premises", "pos": "n.", "meaning": "부지, 구내", "example": "No smoking is allowed anywhere on the premises.", "exampleKo": "구내 어디에서도 흡연은 허용되지 않는다." }
+  ],
+  "sentences": [
+    { "id": "s-0815-1", "text": "The tenant renewed the lease for another two years.", "ko": "세입자는 임대차 계약을 2년 더 갱신했다.", "blankWord": "lease", "distractors": ["leash", "release", "decrease"] },
+    { "id": "s-0815-2", "text": "The tenant complained loudly about the broken elevator today.", "ko": "세입자는 오늘 고장 난 엘리베이터에 대해 크게 항의했다.", "blankWord": "tenant", "distractors": ["tenet", "tent", "patent"] },
+    { "id": "s-0815-3", "text": "The office renovation is expected to finish by June.", "ko": "사무실 보수 공사는 6월까지 끝날 것으로 예상된다.", "blankWord": "renovation", "distractors": ["innovation", "reservation", "reputation"] },
+    { "id": "s-0815-4", "text": "The landlord repainted the hallway before the new tenant moved in.", "ko": "임대인은 새 세입자가 입주하기 전에 복도를 다시 칠했다.", "blankWord": "landlord", "distractors": ["landmark", "landscape", "landfill"] },
+    { "id": "s-0815-5", "text": "The firm decided to relocate its warehouse closer to the port.", "ko": "그 회사는 창고를 항구에 더 가깝게 이전하기로 결정했다.", "blankWord": "relocate", "distractors": ["renovate", "reallocate", "relate"] }
+  ]
+}
