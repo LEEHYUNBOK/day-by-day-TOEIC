@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { fetchIndex, fetchDay } from '@/lib/contentRepo';
 import { getDayRecords, getWrongNotes, addReviewRecord, addWrongNote, resolveWrongNote } from '@/lib/progressRepo';
-import { buildWordQuiz, buildBlankQuiz, shuffle, type QuizItem, type BlankQuizItem } from '@/lib/quiz';
+import { buildWordQuiz, buildBlankQuiz, shuffle, type QuizItem } from '@/lib/quiz';
 import { todayStr, addDays } from '@/lib/date';
 import QuizCard from '@/components/QuizCard';
 import type { DayContent, DayIndexEntry, DayRecord, WrongNote, Word, Sentence, QuizType } from '@/lib/types';
@@ -82,6 +82,17 @@ function labelOf(item: QuizItem): string {
   return item.type === 'word' ? item.word.word : item.sentence.text;
 }
 
+// 문항이 오답노트에 이미 올라와 있는 항목이면 그 노트의 원래 type(들)을 그대로 쓴다.
+// buildBlankQuiz는 항상 type:'blank'로 문항을 만들지만, 그 문장이 실제로는 'arrange'(문장 조합)
+// 오답으로 기록되어 있을 수도 있으므로, 퀴즈 문항의 type이 아니라 노트 저장소의 type을 기준으로
+// resolveWrongNote/addWrongNote를 호출해야 같은 항목이 중복 행으로 쌓이지 않는다.
+// 아직 노트가 없는 항목(신규 오답)은 이번에 실제로 푼 문항 형식(item.type)을 그대로 쓴다.
+function originNoteTypes(item: QuizItem, existingNotes: WrongNote[]): QuizType[] {
+  if (item.type === 'word') return ['word'];
+  const matches = existingNotes.filter((n) => n.itemId === item.itemId && n.type !== 'word');
+  return matches.length > 0 ? matches.map((n) => n.type) : [item.type];
+}
+
 export default function ReviewPage() {
   const router = useRouter();
   const [state, setState] = useState<LoadedState | null>(null);
@@ -133,11 +144,13 @@ export default function ReviewPage() {
     if (!scope) return;
     const correct = finalLogs.filter((l) => l.correct).length;
     addReviewRecord({ takenAt: new Date().toISOString(), scope, correct, total: finalLogs.length });
-    finalLogs.forEach((l) => {
+    const existingNotes = getWrongNotes();
+    finalLogs.forEach((l, i) => {
+      const noteTypes = originNoteTypes(items[i], existingNotes);
       if (l.correct) {
-        if (scope === 'wrong') resolveWrongNote(l.type, l.itemId);
+        if (scope === 'wrong') noteTypes.forEach((t) => resolveWrongNote(t, l.itemId));
       } else {
-        addWrongNote({ type: l.type, itemId: l.itemId, date: todayStr() });
+        noteTypes.forEach((t) => addWrongNote({ type: t, itemId: l.itemId, date: todayStr() }));
       }
     });
     setState((prev) => (prev ? { ...prev, wrongNotes: getWrongNotes(), records: getDayRecords() } : prev));
@@ -240,7 +253,7 @@ export default function ReviewPage() {
           {current.type === 'blank' && (
             <QuizCard
               key={current.itemId}
-              prompt={(current as BlankQuizItem).blankedText}
+              prompt={current.blankedText}
               choices={current.choices}
               onNext={handleAnswer}
             />
