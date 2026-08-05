@@ -14,7 +14,7 @@
     { "id": "w-notify", "word": "notify", "pos": "v.", "meaning": "통지하다", "example": "The office will notify staff of any schedule changes.", "exampleKo": "사무실은 일정 변경 사항을 직원들에게 통지할 것이다." }
   ],
   "sentences": [
-    { "id": "s-0810-1", "text": "The supervisor will assign new duties to each employee.", "ko": "감독자는 각 직원에게 새로운 업무를 배정할 것이다.", "blankWord": "assign", "distractors": ["feign", "resign", "design"] },
+    { "id": "s-0810-1", "text": "The supervisor will assign new duties to each employee.", "ko": "감독자는 각 직원에게 새로운 업무를 배정할 것이다.", "blankWord": "assign", "distractors": ["sign", "resign", "design"] },
     { "id": "s-0810-2", "text": "The clinic follows a strict procedure for handling records.", "ko": "그 병원은 기록 관리에 엄격한 절차를 따른다.", "blankWord": "procedure", "distractors": ["procession", "proceeds", "profession"] },
     { "id": "s-0810-3", "text": "A helpful colleague reviewed my presentation before the meeting.", "ko": "친절한 동료가 회의 전에 내 발표 자료를 검토해 주었다.", "blankWord": "colleague", "distractors": ["college", "collage", "collapse"] },
     { "id": "s-0810-4", "text": "The new schedule reduced everyone's workload last month.", "ko": "새 일정은 지난달 모두의 업무량을 줄여 주었다.", "blankWord": "workload", "distractors": ["workshop", "upload", "overhaul"] },
