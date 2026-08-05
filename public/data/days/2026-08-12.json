@@ -1,0 +1,23 @@
+{
+  "date": "2026-08-12",
+  "title": "Day 9 — 생산과 물류",
+  "words": [
+    { "id": "w-manufacture", "word": "manufacture", "pos": "v.", "meaning": "제조하다", "example": "The factory will manufacture two thousand units this month.", "exampleKo": "그 공장은 이번 달에 2천 대를 제조할 것이다." },
+    { "id": "w-inventory", "word": "inventory", "pos": "n.", "meaning": "재고", "example": "The warehouse staff counted the entire inventory overnight.", "exampleKo": "창고 직원들은 밤새 전체 재고를 세었다." },
+    { "id": "w-shipment", "word": "shipment", "pos": "n.", "meaning": "배송(품)", "example": "The shipment arrived three days later than expected.", "exampleKo": "그 배송품은 예상보다 사흘 늦게 도착했다." },
+    { "id": "w-warehouse", "word": "warehouse", "pos": "n.", "meaning": "창고", "example": "The new warehouse can store twice as many pallets.", "exampleKo": "새 창고는 팔레트를 두 배나 더 보관할 수 있다." },
+    { "id": "w-supplier", "word": "supplier", "pos": "n.", "meaning": "공급업체", "example": "We switched to a cheaper supplier last quarter.", "exampleKo": "우리는 지난 분기에 더 저렴한 공급업체로 바꾸었다." },
+    { "id": "w-deliver", "word": "deliver", "pos": "v.", "meaning": "배달하다", "example": "The courier will deliver the package by noon.", "exampleKo": "택배 기사는 정오까지 소포를 배달할 것이다." },
+    { "id": "w-defective", "word": "defective", "pos": "adj.", "meaning": "결함이 있는", "example": "The customer returned a defective blender for a refund.", "exampleKo": "고객은 결함이 있는 믹서를 환불받기 위해 반품했다." },
+    { "id": "w-assembly", "word": "assembly", "pos": "n.", "meaning": "조립", "example": "Workers finished the assembly of the engine in an hour.", "exampleKo": "작업자들은 한 시간 만에 엔진 조립을 마쳤다." },
+    { "id": "w-quality", "word": "quality", "pos": "n.", "meaning": "품질", "example": "The factory improved quality by adding a final inspection.", "exampleKo": "그 공장은 최종 검사를 추가해 품질을 개선했다." },
+    { "id": "w-distribute", "word": "distribute", "pos": "v.", "meaning": "유통시키다", "example": "The firm plans to distribute the product across Asia.", "exampleKo": "그 회사는 아시아 전역에 그 제품을 유통할 계획이다." }
+  ],
+  "sentences": [
+    { "id": "s-0812-1", "text": "This plant will manufacture car parts for export.", "ko": "이 공장은 수출용 자동차 부품을 제조할 것이다.", "blankWord": "manufacture", "distractors": ["manipulate", "maintain", "manage"] },
+    { "id": "s-0812-2", "text": "The delayed shipment finally arrived at the warehouse this morning.", "ko": "지연된 배송품이 오늘 아침 마침내 창고에 도착했다.", "blankWord": "shipment", "distractors": ["requirement", "agreement", "achievement"] },
+    { "id": "s-0812-3", "text": "We negotiated better prices with our main supplier.", "ko": "우리는 주요 공급업체와 더 나은 가격을 협상했다.", "blankWord": "supplier", "distractors": ["supplement", "supervisor", "supporter"] },
+    { "id": "s-0812-4", "text": "Customers may return any defective item within thirty days.", "ko": "고객은 결함이 있는 제품을 30일 이내에 반품할 수 있다.", "blankWord": "defective", "distractors": ["objective", "selective", "effective"] },
+    { "id": "s-0812-5", "text": "The plant added a second assembly line to increase output.", "ko": "그 공장은 생산량을 늘리기 위해 두 번째 조립 라인을 추가했다.", "blankWord": "assembly", "distractors": ["assessment", "assortment", "assignment"] }
+  ]
+}
