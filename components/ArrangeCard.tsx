@@ -33,17 +33,27 @@ export default function ArrangeCard({ ko, tokens, answerTokens, onNext }: Arrang
   }
 
   const answerBoxStyle = !checked
-    ? 'border-gray-300 dark:border-gray-700'
+    ? 'border-dashed border-gray-300 dark:border-gray-700'
     : correct
-      ? 'border-green-500 bg-green-50 dark:bg-green-950'
-      : 'border-red-500 bg-red-50 dark:bg-red-950';
+      ? 'border-solid border-green-500 bg-green-50 dark:bg-green-950'
+      : 'border-solid border-red-500 bg-red-50 dark:bg-red-950';
 
   return (
     <div className="rounded-2xl border border-gray-200 p-6 dark:border-gray-800">
       <p className="text-xl font-semibold text-center mb-6">{ko}</p>
 
+      {checked && (
+        <p
+          className={`mb-2 text-sm font-semibold ${
+            correct ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'
+          }`}
+        >
+          <span aria-hidden="true">{correct ? '✓' : '✗'}</span> {correct ? '정답' : '오답'}
+        </p>
+      )}
+
       <div
-        className={`min-h-14 rounded-lg border-2 border-dashed p-3 flex flex-wrap gap-2 mb-4 ${answerBoxStyle}`}
+        className={`min-h-14 rounded-lg border-2 p-3 flex flex-wrap gap-2 mb-4 ${answerBoxStyle}`}
       >
         {placed.map((i, pos) => (
           <button
@@ -59,7 +69,7 @@ export default function ArrangeCard({ ko, tokens, answerTokens, onNext }: Arrang
       </div>
 
       {checked && !correct && (
-        <p className="mb-4 rounded-lg bg-green-50 p-3 text-center text-base font-medium text-green-700 dark:bg-green-950 dark:text-green-300">
+        <p className="mb-4 rounded-lg bg-gray-100 p-3 text-center text-base font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200">
           {answerTokens.join(' ')}
         </p>
       )}

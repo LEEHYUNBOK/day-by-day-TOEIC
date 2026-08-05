@@ -42,15 +42,27 @@ export default function QuizCard({ prompt, subPrompt, choices, onNext }: QuizCar
               style = 'border-gray-100 bg-white text-gray-400 dark:border-gray-800 dark:text-gray-600';
             }
           }
+          const showCorrectBadge = locked && choice.correct;
+          const showWrongBadge = locked && i === selected && !choice.correct;
           return (
             <button
               key={i}
               type="button"
               disabled={locked}
               onClick={() => handleChoice(i)}
-              className={`min-h-14 w-full rounded-lg border-2 px-4 text-lg font-medium transition-colors ${style}`}
+              className={`min-h-14 w-full rounded-lg border-2 px-4 text-lg font-medium transition-colors flex items-center justify-center gap-2 ${style}`}
             >
-              {choice.text}
+              <span>{choice.text}</span>
+              {showCorrectBadge && (
+                <span className="text-sm font-semibold whitespace-nowrap">
+                  <span aria-hidden="true">✓</span> 정답
+                </span>
+              )}
+              {showWrongBadge && (
+                <span className="text-sm font-semibold whitespace-nowrap">
+                  <span aria-hidden="true">✗</span> 오답
+                </span>
+              )}
             </button>
           );
         })}

@@ -12,6 +12,7 @@ export default function WordBrowse({ words, onDone }: WordBrowseProps) {
   const [index, setIndex] = useState(0);
 
   const word = words[index];
+  if (!word) return null;
   const isLast = index === words.length - 1;
 
   return (
