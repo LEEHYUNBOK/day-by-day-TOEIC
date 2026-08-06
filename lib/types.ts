@@ -30,3 +30,26 @@ export interface ReviewRecord {
   scope: 'recent7' | 'all' | 'wrong';
   correct: number; total: number;
 }
+
+export type Box = 0 | 1 | 2 | 3;
+
+export interface SrsCard {
+  itemId: string;      // 'w-negotiate' 또는 's-0804-1'
+  type: QuizType;
+  sourceDate: string;  // 이 항목이 든 day 파일의 날짜 (원문 조회용)
+  box: Box;
+  dueDate: string;     // YYYY-MM-DD, 이 날부터 출제 대상
+}
+
+export interface MasteredItem {
+  itemId: string;
+  type: QuizType;
+  masteredAt: string;  // ISO
+}
+
+export interface SessionRecord {
+  finishedAt: string;  // ISO
+  date: string;        // YYYY-MM-DD (로컬)
+  correct: number;
+  total: number;
+}
