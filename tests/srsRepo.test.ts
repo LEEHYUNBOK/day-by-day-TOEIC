@@ -28,6 +28,14 @@ describe('empty and corrupted storage', () => {
     expect(getMastered()).toEqual([]);
     expect(getSessions()).toEqual([]);
   });
+  it('degrades to empty on valid JSON that is not an array, for every key', () => {
+    localStorage.setItem('ddt.srs', '{}');
+    localStorage.setItem('ddt.mastered', '42');
+    localStorage.setItem('ddt.sessions', '"nope"');
+    expect(getCards()).toEqual([]);
+    expect(getMastered()).toEqual([]);
+    expect(getSessions()).toEqual([]);
+  });
 });
 
 describe('findCard', () => {
@@ -120,6 +128,20 @@ describe('commitSession', () => {
     commitSession([{ identity: ident('w-1'), correct: true }], TODAY, NOW);
     commitSession([{ identity: ident('w-2'), correct: true }], '2026-08-07', NOW);
     expect(getSessions()).toHaveLength(2);
+  });
+
+  it('resolves a repeated identity within one session using the later answer, keeping one card', () => {
+    commitSession(
+      [
+        { identity: ident('w-1'), correct: true },
+        { identity: ident('w-1'), correct: false },
+      ],
+      TODAY, NOW,
+    );
+    const cards = getCards();
+    expect(cards).toHaveLength(1);
+    expect(cards[0]).toMatchObject({ box: 0, dueDate: '2026-08-07' });
+    expect(getSessions()).toEqual([{ finishedAt: NOW, date: TODAY, correct: 1, total: 2 }]);
   });
 });
 
