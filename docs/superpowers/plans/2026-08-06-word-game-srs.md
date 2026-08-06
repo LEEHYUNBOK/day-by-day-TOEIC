@@ -1025,7 +1025,7 @@ git commit -m "feat: add vocabulary list page"
 ### Task 8: 통계 개편 + 네비게이션 정리
 
 **Files:**
-- Modify: `app/stats/page.tsx` (전면 교체), `components/Nav.tsx`
+- Modify: `app/stats/page.tsx` (전면 교체), `components/Nav.tsx`, `app/layout.tsx`, `app/vocab/page.tsx`
 
 **Interfaces:**
 - Consumes: `getCards`, `getMastered`, `getSessions`, `calcStreak`, `countDueOn` (Task 4); `todayStr`, `addDays` (`lib/date.ts`)
@@ -1054,7 +1054,9 @@ git commit -m "feat: add vocabulary list page"
 
 - [ ] **Step 2: `app/stats/page.tsx` 전면 교체**
 
-- [ ] **Step 3: `components/Nav.tsx` 링크 3개로**
+- [ ] **Step 3: 네비게이션 이동 + 링크 3개로**
+
+위 "네비게이션 위치를 옮긴다"대로 네 파일을 손본다: `Nav.tsx`(링크 3개, `/learn` 숨김 로직 제거), `app/layout.tsx`(`<Nav />` 제거), `app/vocab/page.tsx`와 `app/stats/page.tsx`(각자 `<Nav />` 렌더).
 
 - [ ] **Step 4: 검증**
 
@@ -1066,8 +1068,8 @@ Expected: 전부 통과. 빌드는 이 시점에 옛 라우트들까지 포함�
 - [ ] **Step 5: 커밋**
 
 ```bash
-git add app/stats/page.tsx components/Nav.tsx
-git commit -m "feat: rebuild stats on SRS data and trim nav"
+git add app/stats/page.tsx components/Nav.tsx app/layout.tsx app/vocab/page.tsx
+git commit -m "feat: rebuild stats on SRS data and move nav out of the game screen"
 ```
 
 ---
@@ -1076,7 +1078,7 @@ git commit -m "feat: rebuild stats on SRS data and trim nav"
 
 **Files:**
 - Delete: `app/calendar/`, `app/learn/`, `app/review/`, `app/notes/`, `components/MonthCalendar.tsx`, `components/SessionRunner.tsx`, `components/WordBrowse.tsx`, `lib/progressRepo.ts`, `tests/progressRepo.test.ts`
-- Modify: `lib/types.ts` (`DayRecord`, `WrongNote`, `ReviewRecord` 제거), `components/Nav.tsx` (`/learn` 숨김 로직 정리), `README.md`
+- Modify: `lib/types.ts` (`DayRecord`, `WrongNote`, `ReviewRecord` 제거), `README.md`
 
 **Interfaces:**
 - Consumes: 이전 태스크 전부
