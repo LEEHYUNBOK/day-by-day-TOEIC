@@ -60,7 +60,17 @@
 
 ## 5. 테이블
 
-OURFLIX와 **같은 Supabase 프로젝트**, `public` 스키마, `toeic_` 접두사로 구분한다. 마이그레이션 파일은 OURFLIX 레포의 `supabase/migrations/` 관례를 따른다.
+OURFLIX와 **같은 Supabase 프로젝트**, `public` 스키마, `toeic_` 접두사로 구분한다.
+
+### 5.1 마이그레이션의 소유권과 실행
+
+**마이그레이션 SQL은 OURFLIX 레포(`~/Desktop/proposs/supabase/migrations/`)에 새 번호를 붙여 추가한다.** 그 레포가 이 Supabase 프로젝트의 스키마를 소유하고 있으므로, 한 DB의 스키마 이력이 레포 두 곳으로 갈라지지 않게 한다. 이 TOEIC 레포에는 `supabase/` 디렉토리를 만들지 않는다.
+
+이건 이 스펙에서 **OURFLIX 레포를 수정하는 유일한 지점**이다. 기존 마이그레이션 파일은 건드리지 않고 새 파일만 추가한다.
+
+**실행은 사용자가 직접 한다.** Supabase 대시보드의 SQL 에디터에 붙여넣거나 OURFLIX의 기존 `scripts/run-migration.ts`를 쓴다. 구현 과정에서 DB에 직접 접속하지 않으므로 `SUPABASE_SERVICE_ROLE_KEY`나 `SUPABASE_DB_URL`은 이 프로젝트로 가져오지 않는다 — `.env.local`에는 브라우저에 노출되도록 설계된 `NEXT_PUBLIC_*` 두 개만 둔다.
+
+마이그레이션은 재실행 가능하게 작성한다 (`create table if not exists`, 정책은 `drop policy if exists` 후 `create` — OURFLIX의 `001_schema.sql`이 쓰는 방식과 동일하다).
 
 ```sql
 create table if not exists toeic_cards (
@@ -101,11 +111,12 @@ RLS는 세 테이블 모두 동일하게, 자기 행만 읽고 쓴다:
 
 ```sql
 alter table toeic_cards enable row level security;
+drop policy if exists "own toeic cards" on toeic_cards;
 create policy "own toeic cards" on toeic_cards
   for all using (user_id = auth.uid()) with check (user_id = auth.uid());
 ```
 
-`toeic_mastered`, `toeic_sessions`도 같은 형태로 만든다.
+`toeic_mastered`, `toeic_sessions`도 같은 형태로 만든다. RLS를 켜는 것을 빠뜨리면 anon key로 남의 학습 기록을 읽을 수 있으므로, 세 테이블 모두에 `enable row level security`가 있는지 마이그레이션 실행 후 확인한다.
 
 ## 6. 로그인 시 기록 이전
 
