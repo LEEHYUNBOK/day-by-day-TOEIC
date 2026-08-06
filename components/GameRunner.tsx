@@ -20,8 +20,6 @@ export interface GameItem {
 interface GameRunnerProps {
   items: GameItem[];
   today: string;
-  /** 판 시작 시점의 "내일 볼 개수". 결과 화면에는 커밋 후 값을 다시 계산해 쓴다. */
-  dueTomorrowBefore: number;
   onExit: () => void;
   onRestart: () => void;
 }
