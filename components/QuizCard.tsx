@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 import type { Choice } from '@/lib/quiz';
 
 interface QuizCardProps {
@@ -8,9 +9,10 @@ interface QuizCardProps {
   subPrompt?: string; // 품사 등 보조 표시
   choices: Choice[];
   onNext: (correct: boolean) => void;
+  explanation?: ReactNode; // 틀렸을 때만 렌더된다
 }
 
-export default function QuizCard({ prompt, subPrompt, choices, onNext }: QuizCardProps) {
+export default function QuizCard({ prompt, subPrompt, choices, onNext, explanation }: QuizCardProps) {
   const [selected, setSelected] = useState<number | null>(null);
 
   const locked = selected !== null;
@@ -67,6 +69,12 @@ export default function QuizCard({ prompt, subPrompt, choices, onNext }: QuizCar
           );
         })}
       </div>
+
+      {locked && !correct && explanation && (
+        <div className="mt-4 rounded-2xl border border-gray-200 p-4 dark:border-gray-800">
+          {explanation}
+        </div>
+      )}
 
       {locked && (
         <button

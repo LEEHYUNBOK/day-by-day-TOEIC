@@ -69,9 +69,12 @@ export default function ArrangeCard({ ko, tokens, answerTokens, onNext }: Arrang
       </div>
 
       {checked && !correct && (
-        <p className="mb-4 rounded-lg bg-gray-100 p-3 text-center text-base font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200">
-          {answerTokens.join(' ')}
-        </p>
+        <div className="mb-4 rounded-lg bg-gray-100 p-3 text-center dark:bg-gray-800">
+          <p className="text-base font-medium text-gray-700 dark:text-gray-200">
+            {answerTokens.join(' ')}
+          </p>
+          <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">{ko}</p>
+        </div>
       )}
 
       <div className="flex flex-wrap gap-2 mb-4">
