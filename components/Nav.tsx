@@ -5,18 +5,12 @@ import { usePathname } from 'next/navigation';
 
 const links = [
   { href: '/', label: '홈' },
-  { href: '/calendar', label: '달력' },
-  { href: '/review', label: '복습' },
-  { href: '/notes', label: '오답노트' },
+  { href: '/vocab', label: '단어장' },
   { href: '/stats', label: '통계' },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
-
-  if (pathname.startsWith('/learn')) {
-    return null;
-  }
 
   return (
     <nav className="flex justify-center border-b border-gray-200 dark:border-gray-800">
