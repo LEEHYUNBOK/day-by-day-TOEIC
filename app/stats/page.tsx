@@ -8,7 +8,7 @@ import { todayStr, addDays } from '@/lib/date';
 import type { Box, SrsCard, MasteredItem, SessionRecord } from '@/lib/types';
 
 const BOX_LABEL: Record<Box, string> = {
-  0: '새로 배움',
+  0: '기초 단계',
   1: '익히는 중',
   2: '거의 외움',
   3: '마지막 확인',
