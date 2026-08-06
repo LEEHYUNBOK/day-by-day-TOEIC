@@ -488,12 +488,12 @@ export function buildQueue(
 - [ ] **Step 4: 통과 확인**
 
 Run: `npx vitest run tests/queue.test.ts`
-Expected: PASS (12 tests)
+Expected: PASS (13 tests)
 
 - [ ] **Step 5: 전체 스위트 + 커밋**
 
 Run: `npm test`
-Expected: 47개 통과 (22 기존 + 13 srs + 12 queue)
+Expected: 48개 통과 (22 기존 + 13 srs + 13 queue)
 
 ```bash
 git add lib/queue.ts tests/queue.test.ts
@@ -820,7 +820,7 @@ Expected: PASS (18 tests)
 - [ ] **Step 5: 전체 스위트 + 커밋**
 
 Run: `npm test`
-Expected: 65개 통과 (22 기존 + 13 srs + 12 queue + 18 srsRepo)
+Expected: 66개 통과 (22 기존 + 13 srs + 13 queue + 18 srsRepo)
 
 ```bash
 git add lib/srsRepo.ts tests/srsRepo.test.ts
@@ -868,7 +868,7 @@ interface QuizCardProps {
 - [ ] **Step 3: 검증**
 
 Run: `npx tsc --noEmit && npx eslint . && npm test`
-Expected: 타입·린트 깨끗, 65개 통과
+Expected: 타입·린트 깨끗, 66개 통과
 
 기존 `/learn/[date]` 화면이 `QuizCard`를 `explanation` 없이 쓰고 있으므로, prop이 선택적임을 실제로 확인한다 — 위 `tsc`가 통과하면 확인된 것이다.
 
@@ -958,7 +958,7 @@ type Phase = 'quiz' | 'result';
 
 - [ ] **Step 4: 검증 — 실제로 한 판 돌려본다**
 
-Run: `npx tsc --noEmit && npx eslint . && npm test` (65개 통과)
+Run: `npx tsc --noEmit && npx eslint . && npm test` (66개 통과)
 
 그리고 `npm run dev`로 실제 확인:
 - `/`에 접속 → 스피너 후 바로 첫 문항이 뜨는지 (대시보드가 안 보이는지)
@@ -1113,7 +1113,7 @@ Expected: 아무것도 안 나온다. 나오면 그 파일이 삭제 목록에�
 - [ ] **Step 5: 전체 검증**
 
 Run: `npm test && npm run validate-data && npx tsc --noEmit && npx eslint . && npm run build`
-Expected: **테스트 57개 통과** — Task 8까지 65개였고(기존 22 + srs 13 + queue 12 + srsRepo 18), 이 태스크에서 `tests/progressRepo.test.ts`의 8개를 삭제하므로 65 − 8 = 57이다. 데이터 14일 통과, 빌드 성공. 라우트는 `/`, `/vocab`, `/stats` 세 개여야 한다
+Expected: **테스트 58개 통과** — Task 8까지 66개였고(기존 22 + srs 13 + queue 13 + srsRepo 18), 이 태스크에서 `tests/progressRepo.test.ts`의 8개를 삭제하므로 66 − 8 = 58이다. 데이터 14일 통과, 빌드 성공. 라우트는 `/`, `/vocab`, `/stats` 세 개여야 한다
 
 - [ ] **Step 6: 수동 QA 체크리스트**
 
