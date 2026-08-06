@@ -37,6 +37,13 @@ export default function GameRunner({ items, today, onExit, onRestart }: GameRunn
 
   const current = items[idx];
 
+  function handleExit() {
+    if (answers.length > 0 && !window.confirm('지금 나가면 이번 판 답이 사라져요. 나갈까요?')) {
+      return;
+    }
+    onExit();
+  }
+
   function handleAnswer(correct: boolean) {
     // 스테일 상태 함정: 마지막 문항에서 setAnswers 이후 answers를 읽으면 방금 답이 빠진다.
     // finalAnswers를 지역 변수로 만들어 setAnswers와 커밋에 같은 값을 쓴다.
@@ -128,7 +135,7 @@ export default function GameRunner({ items, today, onExit, onRestart }: GameRunn
           </span>
           <button
             type="button"
-            onClick={onExit}
+            onClick={handleExit}
             className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
           >
             나가기

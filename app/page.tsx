@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { fetchIndex, fetchDay } from '@/lib/contentRepo';
 import { getCards, getMasteredKeys, countDueOn } from '@/lib/srsRepo';
 import { buildQueue } from '@/lib/queue';
@@ -23,10 +24,11 @@ type LoadState =
   | { status: 'ready'; session: Session };
 
 export default function HomePage() {
+  const router = useRouter();
   const [state, setState] = useState<LoadState>({ status: 'loading' });
   const [seed, setSeed] = useState(0);
 
-  // '한 판 더'와 '나가기' 모두 이걸 호출한다: 큐를 다시 구성해 새 판을 시작한다.
+  // '한 판 더'가 호출한다: 큐를 다시 구성해 새 판을 시작한다.
   const restart = useCallback(() => {
     setState({ status: 'loading' });
     setSeed((s) => s + 1);
@@ -136,7 +138,7 @@ export default function HomePage() {
       items={state.session.items}
       today={state.session.today}
       dueTomorrowBefore={state.session.dueTomorrowBefore}
-      onExit={restart}
+      onExit={() => router.push('/stats')}
       onRestart={restart}
     />
   );
