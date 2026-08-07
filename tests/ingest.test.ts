@@ -24,6 +24,10 @@ describe('validateInput — 통과하는 경우', () => {
   it('문장 0개도 허용한다', () => {
     expect(validateInput(input({ sentences: [] }), new Set())).toEqual({ ok: true, errors: [] });
   });
+  it('sentences 키 자체가 없어도 허용한다 (단어만 있는 날)', () => {
+    const wordsOnly = { title: input().title, words: input().words };
+    expect(validateInput(wordsOnly, new Set())).toEqual({ ok: true, errors: [] });
+  });
   it('단어 1개면 통과한다 (분량 제한 없음)', () => {
     expect(validateInput(input({ words: [word()] }), new Set()).ok).toBe(true);
   });

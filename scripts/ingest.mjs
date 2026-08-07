@@ -148,16 +148,19 @@ async function main() {
     process.exit(1);
   }
 
+  const words = input.words;
+  const sentences = Array.isArray(input.sentences) ? input.sentences : [];
+
   try {
-    if (input.words.length) {
-      await api.post('/toeic_words', input.words.map((w, i) => ({
+    if (words.length) {
+      await api.post('/toeic_words', words.map((w, i) => ({
         item_id: w.id, set_id: setId, seq: i + 1,
         word: w.word, pos: w.pos, meaning: w.meaning,
         example: w.example, example_ko: w.exampleKo,
       })));
     }
-    if (input.sentences.length) {
-      await api.post('/toeic_sentences', input.sentences.map((s, i) => ({
+    if (sentences.length) {
+      await api.post('/toeic_sentences', sentences.map((s, i) => ({
         item_id: s.id, set_id: setId, seq: i + 1,
         text: s.text, ko: s.ko, blank_word: s.blankWord, distractors: s.distractors,
       })));
@@ -185,7 +188,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK — "${input.title}" (seq ${nextSeq}): 단어 ${input.words.length}개, 문장 ${input.sentences.length}개`);
+  console.log(`OK — "${input.title}" (seq ${nextSeq}): 단어 ${words.length}개, 문장 ${sentences.length}개`);
 }
 
 // 테스트에서 import 할 때는 main 을 실행하지 않는다
