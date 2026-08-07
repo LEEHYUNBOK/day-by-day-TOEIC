@@ -3,8 +3,8 @@ import { toBundle } from '@/lib/contentRepo';
 import type { RawSet, RawWord, RawSentence } from '@/lib/contentRepo';
 
 const sets: RawSet[] = [
-  { id: 20, seq: 2 },
-  { id: 10, seq: 1 },
+  { id: 10, seq: 2 },
+  { id: 20, seq: 1 },
 ];
 const rawWord = (item_id: string, set_id: number, seq: number): RawWord => ({
   item_id, set_id, seq,
@@ -20,7 +20,7 @@ describe('toBundle — 순서', () => {
   it('묶음 seq 순으로 정렬한다 (id 순이 아니다)', () => {
     const words = [rawWord('w-b', 20, 1), rawWord('w-a', 10, 1)];
     const out = toBundle(sets, words, []);
-    expect(out.words.map((w) => w.id)).toEqual(['w-a', 'w-b']);
+    expect(out.words.map((w) => w.id)).toEqual(['w-b', 'w-a']);
   });
   it('같은 묶음 안에서는 항목 seq 순으로 정렬한다', () => {
     const words = [rawWord('w-2', 10, 2), rawWord('w-1', 10, 1)];
@@ -30,7 +30,7 @@ describe('toBundle — 순서', () => {
   it('문장도 같은 규칙으로 정렬한다', () => {
     const sentences = [rawSentence('s-b', 20, 1), rawSentence('s-a', 10, 1)];
     const out = toBundle(sets, [], sentences);
-    expect(out.sentences.map((s) => s.id)).toEqual(['s-a', 's-b']);
+    expect(out.sentences.map((s) => s.id)).toEqual(['s-b', 's-a']);
   });
   it('알 수 없는 set_id를 가진 항목은 버린다', () => {
     const words = [rawWord('w-orphan', 999, 1), rawWord('w-ok', 10, 1)];

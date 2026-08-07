@@ -46,7 +46,6 @@ export function toBundle(sets: RawSet[], words: RawWord[], sentences: RawSentenc
   const order = <T extends { set_id: number; seq: number }>(rows: T[]): T[] =>
     rows
       .filter((r) => seqOf.has(r.set_id))
-      .slice()
       .sort((a, b) => (seqOf.get(a.set_id)! - seqOf.get(b.set_id)!) || (a.seq - b.seq));
 
   return {
