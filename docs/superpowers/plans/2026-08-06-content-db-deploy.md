@@ -236,9 +236,11 @@ import { describe, it, expect } from 'vitest';
 import { toBundle } from '@/lib/contentRepo';
 import type { RawSet, RawWord, RawSentence } from '@/lib/contentRepo';
 
+// id 와 seq 를 반대 방향으로 둔다. 그래야 "seq 로 정렬" 과 "id 로 정렬" 이
+// 서로 다른 결과를 내고, 테스트가 둘을 구분할 수 있다.
 const sets: RawSet[] = [
-  { id: 20, seq: 2 },
-  { id: 10, seq: 1 },
+  { id: 10, seq: 2 },
+  { id: 20, seq: 1 },
 ];
 const rawWord = (item_id: string, set_id: number, seq: number): RawWord => ({
   item_id, set_id, seq,
@@ -252,17 +254,18 @@ const rawSentence = (item_id: string, set_id: number, seq: number): RawSentence 
 
 describe('toBundle — 순서', () => {
   it('묶음 seq 순으로 정렬한다 (id 순이 아니다)', () => {
-    const words = [rawWord('w-b', 20, 1), rawWord('w-a', 10, 1)];
+    const words = [rawWord('w-b', 10, 1), rawWord('w-a', 20, 1)];
     const out = toBundle(sets, words, []);
+    // set 20 이 seq 1 이므로 w-a 가 먼저다. id 로 정렬하면 w-b 가 먼저가 되어 실패한다.
     expect(out.words.map((w) => w.id)).toEqual(['w-a', 'w-b']);
   });
   it('같은 묶음 안에서는 항목 seq 순으로 정렬한다', () => {
-    const words = [rawWord('w-2', 10, 2), rawWord('w-1', 10, 1)];
+    const words = [rawWord('w-2', 10, 2), rawWord('w-1', 10, 1)];  // 같은 묶음
     const out = toBundle(sets, words, []);
     expect(out.words.map((w) => w.id)).toEqual(['w-1', 'w-2']);
   });
   it('문장도 같은 규칙으로 정렬한다', () => {
-    const sentences = [rawSentence('s-b', 20, 1), rawSentence('s-a', 10, 1)];
+    const sentences = [rawSentence('s-b', 10, 1), rawSentence('s-a', 20, 1)];
     const out = toBundle(sets, [], sentences);
     expect(out.sentences.map((s) => s.id)).toEqual(['s-a', 's-b']);
   });
@@ -859,9 +862,9 @@ export interface ContentBundle {
 ```ts
 it('candidates는 묶음별로 단어 -> 빈칸 -> 조합 순서다', () => {
   const out = toBundle(
-    [{ id: 10, seq: 1 }, { id: 20, seq: 2 }],
-    [rawWord('w-1', 10, 1), rawWord('w-2', 20, 1)],
-    [rawSentence('s-1', 10, 1), rawSentence('s-2', 20, 1)],
+    [{ id: 10, seq: 2 }, { id: 20, seq: 1 }],   // id 와 seq 를 반대로 둔다
+    [rawWord('w-1', 20, 1), rawWord('w-2', 10, 1)],
+    [rawSentence('s-1', 20, 1), rawSentence('s-2', 10, 1)],
   );
   expect(out.candidates.map((c) => `${c.type}:${c.itemId}`)).toEqual([
     'word:w-1', 'blank:s-1', 'arrange:s-1',
