@@ -71,7 +71,7 @@ npm run ingest -- <파일경로>
 - `title`은 필수다.
 - `words`는 1개 이상 있어야 한다. 각 항목은 `id`, `word`, `pos`, `meaning`, `example`, `exampleKo`를 모두 채워야 한다.
 - `sentences`의 각 항목은 `id`, `text`, `ko`, `blankWord`, `distractors`(정확히 3개)를 채워야 한다.
-- `id`는 **단어와 문장을 통틀어** 이 파일 안에서 중복이면 안 되고, 이미 DB에 있는 `item_id`와도 겹치면 안 된다.
+- `id`는 **단어와 문장을 통틀어** 이 파일 안에서 중복이면 안 되고, 이미 DB에 있는 `item_id`와도 겹치면 안 된다. 컨벤션은 단어 `w-<영단어>`, 문장 `s-<날짜>-<번호>`다 — 이 규칙 덕분에 DB 중복 검사가 몇 달 전 Claude가 이미 만든 단어를 다시 넣으려 할 때 걸러준다. 다른 형식(예: `w-1`, `w-2`)을 쓰면 이 보호가 조용히 사라진다.
 
 위 항목들과 아래 `blankWord` 규칙은 `scripts/ingest.mjs`가 자동으로 검사한다(`npm run ingest`). 하지만 스크립트가 **잡아주지 못하는** 규칙들이 있고, 이는 v1 리뷰 과정에서 실제로 문제가 됐던 것들이므로 콘텐츠를 작성할 때 직접 지켜야 한다.
 
@@ -125,7 +125,7 @@ tests/          vitest 유닛 테스트 (lib 위주)
 
 콘텐츠(단어·문장)는 Supabase에 있고, 학습 진도는 브라우저 `localStorage`에만 저장된다. 서버 인증이나 사용자 계정은 없다(추후 별도 프로젝트로 다룬다).
 
-- `lib/contentRepo.ts` — 콘텐츠를 읽는 유일한 창구(`fetchContent`). Supabase의 `toeic_sets` / `toeic_words` / `toeic_sentences` 테이블을 읽어 앱 타입으로 변환한다. 백엔드를 바꾸게 되면 이 파일이 교체 지점이다.
+- `lib/contentRepo.ts` — 콘텐츠를 읽는 유일한 창구(`fetchContent`). Supabase의 `toeic_sets` / `toeic_words` / `toeic_sentences` 테이블을 읽어 앱 타입으로 변환한다. 백엔드를 바꾸게 되면 이 파일이 교체 지점이다. `select`에 `order`나 `limit`을 주지 않고 통째로 읽으므로, Supabase 프로젝트 설정의 **Max rows**(기본값 1,000행으로 추정 — 이 프로젝트에서 직접 늘려잡은 값인지는 확인하지 못했다. 현재 140/70/14행에서는 이 값을 넘겨 요청해도 잘리지 않는 걸 확인했다)를 넘기면 PostgREST가 **에러 없이** 일부만 돌려준다. 매일 단어를 쌓는 구조상 언젠가 이 한도에 닿을 수 있는데, 증상은 오류 화면이 아니라 **새로 넣은 콘텐츠가 이유 없이 안 보이는 것**이다. 콘텐츠가 늘었는데 최근 며칠 것이 안 보이면 이걸 의심한다. 페이지네이션은 아직 하지 않는다(§16).
 - `lib/srsRepo.ts` — SRS 진도를 읽고 쓰는 유일한 창구(`getCards`, `getMastered`, `getSessions`, `commitSession`, `calcStreak`, `countDueOn`). 지금은 `localStorage`를 감싸고 있지만, 서버 동기화가 필요해지면 이 파일이 그 접점이 된다.
 - 쓰는 키는 `ddt.srs`(학습 중인 카드), `ddt.mastered`(졸업한 항목), `ddt.sessions`(세션 기록) 세 개다.
 - v1(날짜별 커리큘럼)에서 쓰던 `ddt.dayRecords`, `ddt.wrongNotes`, `ddt.reviewRecords` 키는 더 이상 쓰지 않으며, 마이그레이션도 하지 않는다.

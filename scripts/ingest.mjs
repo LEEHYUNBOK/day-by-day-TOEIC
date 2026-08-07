@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 const WORD_FIELDS = ['id', 'word', 'pos', 'meaning', 'example', 'exampleKo'];
 const SENTENCE_FIELDS = ['id', 'text', 'ko', 'blankWord'];
 
-/** 구두점을 떼고 공백 기준 토큰으로 쪼갠다 (validate-data.mjs 와 비슷하지만, 따옴표·괄호도 추가로 뗀다). */
+/** 구두점을 떼고 공백 기준 토큰으로 쪼갠다 (따옴표·괄호도 뗀다). */
 function tokens(text) {
   return String(text).split(/\s+/).map((t) => t.replace(/[.,!?;:"'()]/g, ''));
 }
@@ -37,6 +37,13 @@ export function validateInput(input, existingIds) {
 
     if (!Array.isArray(s?.distractors) || s.distractors.length !== 3) {
       errors.push(`문장 ${s?.id}: distractors 는 정확히 3개여야 합니다`);
+    } else {
+      if (s?.blankWord && s.distractors.includes(s.blankWord)) {
+        errors.push(`문장 ${s.id}: distractors 에 정답 "${s.blankWord}" 이 포함되어 있습니다`);
+      }
+      if (new Set(s.distractors).size !== s.distractors.length) {
+        errors.push(`문장 ${s.id}: distractors 안에 중복된 보기가 있습니다`);
+      }
     }
     if (s?.text && s?.blankWord) {
       const ts = tokens(s.text);
@@ -105,15 +112,22 @@ async function main() {
     process.exit(1);
   }
 
-  const env = loadEnv();
-  const api = rest(env);
+  let existing;
+  let api;
+  try {
+    const env = loadEnv();
+    api = rest(env);
 
-  // 기존 id 전부 모아서 중복 검사에 쓴다
-  const [dbWords, dbSentences] = await Promise.all([
-    api.get('/toeic_words?select=item_id'),
-    api.get('/toeic_sentences?select=item_id'),
-  ]);
-  const existing = new Set([...dbWords, ...dbSentences].map((r) => r.item_id));
+    // 기존 id 전부 모아서 중복 검사에 쓴다
+    const [dbWords, dbSentences] = await Promise.all([
+      api.get('/toeic_words?select=item_id'),
+      api.get('/toeic_sentences?select=item_id'),
+    ]);
+    existing = new Set([...dbWords, ...dbSentences].map((r) => r.item_id));
+  } catch (e) {
+    console.error('Supabase 접속 준비 중 오류가 발생했습니다 — 아무것도 넣지 않았습니다:', e.message);
+    process.exit(1);
+  }
 
   const v = validateInput(input, existing);
   if (!v.ok) {

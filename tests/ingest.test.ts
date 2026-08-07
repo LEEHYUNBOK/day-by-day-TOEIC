@@ -108,6 +108,20 @@ describe('validateInput — distractors', () => {
     expect(r.ok).toBe(false);
     expect(r.errors.join(' ')).toMatch(/distractors/);
   });
+  it('distractors 에 정답(blankWord)이 포함되면 거부', () => {
+    const r = validateInput(input({
+      sentences: [sentence('s-1', { distractors: ['reduce', 'renew', 'reverse'] })],
+    }), new Set());
+    expect(r.ok).toBe(false);
+    expect(r.errors.join(' ')).toMatch(/정답/);
+  });
+  it('distractors 안에 중복이 있으면 거부', () => {
+    const r = validateInput(input({
+      sentences: [sentence('s-1', { distractors: ['reduce', 'reduce', 'reverse'] })],
+    }), new Set());
+    expect(r.ok).toBe(false);
+    expect(r.errors.join(' ')).toMatch(/중복/);
+  });
 });
 
 describe('validateInput — id 중복', () => {
