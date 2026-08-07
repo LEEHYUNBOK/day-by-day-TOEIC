@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "validate-data": "node scripts/validate-data.mjs",
     "ingest": "node scripts/ingest.mjs"
   },
   "dependencies": {
