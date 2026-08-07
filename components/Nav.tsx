@@ -7,6 +7,7 @@ const links = [
   { href: '/', label: '홈' },
   { href: '/vocab', label: '단어장' },
   { href: '/stats', label: '통계' },
+  { href: '/setup', label: '설치' },
 ];
 
 export default function Nav() {
