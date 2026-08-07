@@ -61,8 +61,14 @@ export default function HomePage() {
 
         const today = todayStr();
         const cards = getCards();
+        // DB에서 지워진 콘텐츠를 가리키는 카드는 큐 구성 전에 걸러낸다 — 그렇지 않으면
+        // 세션 한 자리를 조용히 잡아먹고, 후보로도 못 살아나므로 학습할 게 없는데도
+        // due로는 잡히는 모순이 생긴다.
+        const live = cards.filter((c) =>
+          c.type === 'word' ? wordById.has(c.itemId) : sentenceById.has(c.itemId),
+        );
         const masteredKeys = getMasteredKeys();
-        const queue = buildQueue(cards, bundle.candidates, masteredKeys, today);
+        const queue = buildQueue(live, bundle.candidates, masteredKeys, today);
 
         const items: GameItem[] = [];
         for (const identity of queue) {
@@ -87,8 +93,8 @@ export default function HomePage() {
 
         if (items.length === 0) {
           const nextDueDate =
-            cards.length > 0 ? cards.reduce((min, c) => (c.dueDate < min ? c.dueDate : min), cards[0].dueDate) : null;
-          setState({ status: 'empty', dueTomorrow: countDueOn(cards, addDays(today, 1)), nextDueDate });
+            live.length > 0 ? live.reduce((min, c) => (c.dueDate < min ? c.dueDate : min), live[0].dueDate) : null;
+          setState({ status: 'empty', dueTomorrow: countDueOn(live, addDays(today, 1)), nextDueDate });
           return;
         }
 
