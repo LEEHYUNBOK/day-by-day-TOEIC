@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 const WORD_FIELDS = ['id', 'word', 'pos', 'meaning', 'example', 'exampleKo'];
 const SENTENCE_FIELDS = ['id', 'text', 'ko', 'blankWord'];
 
-/** 구두점을 떼고 공백 기준 토큰으로 쪼갠다 (validate-data.mjs 와 같은 방식). */
+/** 구두점을 떼고 공백 기준 토큰으로 쪼갠다 (validate-data.mjs 와 비슷하지만, 따옴표·괄호도 추가로 뗀다). */
 function tokens(text) {
   return String(text).split(/\s+/).map((t) => t.replace(/[.,!?;:"'()]/g, ''));
 }
@@ -49,7 +49,7 @@ export function validateInput(input, existingIds) {
     }
   }
 
-  return errors.length ? { ok: false, errors } : { ok: true };
+  return { ok: errors.length === 0, errors };
 }
 
 function loadEnv() {
@@ -122,11 +122,17 @@ async function main() {
     process.exit(1);
   }
 
-  const sets = await api.get('/toeic_sets?select=seq&order=seq.desc&limit=1');
-  const nextSeq = (sets[0]?.seq ?? 0) + 1;
+  let nextSeq, setId;
+  try {
+    const sets = await api.get('/toeic_sets?select=seq&order=seq.desc&limit=1');
+    nextSeq = (sets[0]?.seq ?? 0) + 1;
 
-  const [created] = await api.post('/toeic_sets', { title: input.title, seq: nextSeq }, 'return=representation');
-  const setId = created.id;
+    const [created] = await api.post('/toeic_sets', { title: input.title, seq: nextSeq }, 'return=representation');
+    setId = created.id;
+  } catch (e) {
+    console.error('묶음(set) 생성 중 오류가 발생했습니다 — 아무것도 넣지 않았습니다:', e.message);
+    process.exit(1);
+  }
 
   try {
     if (input.words.length) {
@@ -144,8 +150,24 @@ async function main() {
     }
   } catch (e) {
     console.error('항목 삽입 실패, 방금 만든 묶음을 되돌립니다:', e.message);
-    try { await api.del(`/toeic_sets?id=eq.${setId}`); }
-    catch { console.error(`되돌리기도 실패했습니다. 빈 묶음 id=${setId} 가 남아 있지만 무해합니다 (후보를 만들지 않음).`); }
+    try {
+      await api.del(`/toeic_sets?id=eq.${setId}`);
+    } catch (delErr) {
+      console.error(`되돌리기도 실패했습니다 (set_id=${setId}):`, delErr.message);
+      try {
+        const [words, sentences] = await Promise.all([
+          api.get(`/toeic_words?select=item_id&set_id=eq.${setId}`),
+          api.get(`/toeic_sentences?select=item_id&set_id=eq.${setId}`),
+        ]);
+        console.error(
+          `  실제로 남은 데이터: 단어 ${words.length}개, 문장 ${sentences.length}개 (set_id=${setId}). 수동으로 정리해야 합니다.`,
+        );
+      } catch (checkErr) {
+        console.error(
+          `  무엇이 남았는지 확인하는 조회도 실패했습니다: ${checkErr.message}. Supabase에서 set_id=${setId} 를 직접 확인하세요.`,
+        );
+      }
+    }
     process.exit(1);
   }
 

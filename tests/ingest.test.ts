@@ -19,10 +19,10 @@ const input = (over: Record<string, unknown> = {}) => ({
 
 describe('validateInput — 통과하는 경우', () => {
   it('정상 입력', () => {
-    expect(validateInput(input(), new Set())).toEqual({ ok: true });
+    expect(validateInput(input(), new Set())).toEqual({ ok: true, errors: [] });
   });
   it('문장 0개도 허용한다', () => {
-    expect(validateInput(input({ sentences: [] }), new Set())).toEqual({ ok: true });
+    expect(validateInput(input({ sentences: [] }), new Set())).toEqual({ ok: true, errors: [] });
   });
   it('단어 1개면 통과한다 (분량 제한 없음)', () => {
     expect(validateInput(input({ words: [word()] }), new Set()).ok).toBe(true);
@@ -45,6 +45,24 @@ describe('validateInput — 필수 필드', () => {
     const r = validateInput(input({ words: [bad] }), new Set());
     expect(r.ok).toBe(false);
     expect(r.errors.join(' ')).toMatch(/meaning/);
+  });
+});
+
+describe('validateInput — 문장 필수 필드', () => {
+  it('text 없으면 거부', () => {
+    const r = validateInput(input({ sentences: [sentence('s-1', { text: '' })] }), new Set());
+    expect(r.ok).toBe(false);
+    expect(r.errors.join(' ')).toMatch(/text/);
+  });
+  it('ko 없으면 거부', () => {
+    const r = validateInput(input({ sentences: [sentence('s-1', { ko: '' })] }), new Set());
+    expect(r.ok).toBe(false);
+    expect(r.errors.join(' ')).toMatch(/ko/);
+  });
+  it('blankWord 없으면 거부', () => {
+    const r = validateInput(input({ sentences: [sentence('s-1', { blankWord: '' })] }), new Set());
+    expect(r.ok).toBe(false);
+    expect(r.errors.join(' ')).toMatch(/blankWord/);
   });
 });
 
@@ -76,9 +94,16 @@ describe('validateInput — blankWord 규칙', () => {
 });
 
 describe('validateInput — distractors', () => {
-  it('3개가 아니면 거부', () => {
+  it('3개가 아니면 거부 (2개)', () => {
     const r = validateInput(input({
       sentences: [sentence('s-1', { distractors: ['a', 'b'] })],
+    }), new Set());
+    expect(r.ok).toBe(false);
+    expect(r.errors.join(' ')).toMatch(/distractors/);
+  });
+  it('3개가 아니면 거부 (4개)', () => {
+    const r = validateInput(input({
+      sentences: [sentence('s-1', { distractors: ['a', 'b', 'c', 'd'] })],
     }), new Set());
     expect(r.ok).toBe(false);
     expect(r.errors.join(' ')).toMatch(/distractors/);
