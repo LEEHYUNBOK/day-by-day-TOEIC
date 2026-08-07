@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import { fetchContent, type ContentBundle } from '@/lib/contentRepo';
@@ -45,6 +45,13 @@ function resolveLabel(
 
 export default function VocabPage() {
   const [state, setState] = useState<LoadState>({ status: 'loading' });
+  const [seed, setSeed] = useState(0);
+
+  // 오류 화면의 '다시 시도'가 이걸 호출한다: 상태를 로딩으로 되돌리고 fetchContent를 다시 건다.
+  const restart = useCallback(() => {
+    setState({ status: 'loading' });
+    setSeed((s) => s + 1);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -59,7 +66,7 @@ export default function VocabPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [seed]);
 
   if (state.status === 'loading') {
     return (
@@ -81,7 +88,16 @@ export default function VocabPage() {
             <h1 className="mb-6 text-2xl font-bold">내 단어장</h1>
             <div className="rounded-2xl border border-gray-200 p-6 text-center dark:border-gray-800">
               <p className="mb-2 text-xl font-semibold">불러오지 못했어요</p>
-              <p className="text-gray-500 dark:text-gray-400">네트워크 상태를 확인하고 다시 시도해주세요</p>
+              <p className="mb-6 text-gray-500 dark:text-gray-400">
+                네트워크 상태를 확인하고 다시 시도해주세요
+              </p>
+              <button
+                type="button"
+                onClick={restart}
+                className="flex min-h-14 w-full items-center justify-center rounded-lg bg-blue-600 text-lg font-semibold text-white hover:bg-blue-700"
+              >
+                다시 시도
+              </button>
             </div>
           </div>
         </div>
