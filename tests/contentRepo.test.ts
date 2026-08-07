@@ -54,6 +54,20 @@ describe('toBundle — 필드 매핑', () => {
     });
   });
   it('빈 입력은 빈 번들이다', () => {
-    expect(toBundle([], [], [])).toEqual({ words: [], sentences: [] });
+    expect(toBundle([], [], [])).toEqual({ words: [], sentences: [], candidates: [] });
+  });
+});
+
+describe('toBundle — candidates', () => {
+  it('candidates는 묶음별로 단어 -> 빈칸 -> 조합 순서다', () => {
+    const out = toBundle(
+      [{ id: 10, seq: 2 }, { id: 20, seq: 1 }],   // id 와 seq 를 반대로 둔다
+      [rawWord('w-1', 20, 1), rawWord('w-2', 10, 1)],
+      [rawSentence('s-1', 20, 1), rawSentence('s-2', 10, 1)],
+    );
+    expect(out.candidates.map((c) => `${c.type}:${c.itemId}`)).toEqual([
+      'word:w-1', 'blank:s-1', 'arrange:s-1',
+      'word:w-2', 'blank:s-2', 'arrange:s-2',
+    ]);
   });
 });

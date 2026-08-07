@@ -1,30 +1,11 @@
-import type { DayContent, DayIndexEntry, Word, Sentence } from './types';
+import type { Word, Sentence } from './types';
+import type { CardIdentity } from './srs';
 import { getSupabase } from './supabase';
-
-export async function fetchIndex(): Promise<DayIndexEntry[]> {
-  try {
-    const res = await fetch('/data/index.json');
-    if (!res.ok) return [];
-    const json = await res.json();
-    return json.days ?? [];
-  } catch {
-    return [];
-  }
-}
-
-export async function fetchDay(date: string): Promise<DayContent | null> {
-  try {
-    const res = await fetch(`/data/days/${date}.json`);
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}
 
 export interface ContentBundle {
   words: Word[];
   sentences: Sentence[];
+  candidates: CardIdentity[];   // 묶음별로 단어 -> 빈칸 -> 조합 순서
 }
 
 export interface RawSet { id: number; seq: number }
@@ -48,15 +29,45 @@ export function toBundle(sets: RawSet[], words: RawWord[], sentences: RawSentenc
       .filter((r) => seqOf.has(r.set_id))
       .sort((a, b) => (seqOf.get(a.set_id)! - seqOf.get(b.set_id)!) || (a.seq - b.seq));
 
+  const orderedWords = order(words);
+  const orderedSentences = order(sentences);
+
+  // 묶음 seq별로 단어/문장을 모아, 묶음 순서대로 단어 전부 -> 빈칸 -> 조합을 이어붙인다.
+  const wordsBySetSeq = new Map<number, RawWord[]>();
+  for (const w of orderedWords) {
+    const seq = seqOf.get(w.set_id)!;
+    if (!wordsBySetSeq.has(seq)) wordsBySetSeq.set(seq, []);
+    wordsBySetSeq.get(seq)!.push(w);
+  }
+  const sentencesBySetSeq = new Map<number, RawSentence[]>();
+  for (const s of orderedSentences) {
+    const seq = seqOf.get(s.set_id)!;
+    if (!sentencesBySetSeq.has(seq)) sentencesBySetSeq.set(seq, []);
+    sentencesBySetSeq.get(seq)!.push(s);
+  }
+  const setSeqs = [...new Set([...wordsBySetSeq.keys(), ...sentencesBySetSeq.keys()])].sort((a, b) => a - b);
+
+  const candidates: CardIdentity[] = [];
+  for (const seq of setSeqs) {
+    for (const w of wordsBySetSeq.get(seq) ?? []) {
+      candidates.push({ itemId: w.item_id, type: 'word' });
+    }
+    for (const s of sentencesBySetSeq.get(seq) ?? []) {
+      candidates.push({ itemId: s.item_id, type: 'blank' });
+      candidates.push({ itemId: s.item_id, type: 'arrange' });
+    }
+  }
+
   return {
-    words: order(words).map((w) => ({
+    words: orderedWords.map((w) => ({
       id: w.item_id, word: w.word, pos: w.pos, meaning: w.meaning,
       example: w.example, exampleKo: w.example_ko,
     })),
-    sentences: order(sentences).map((s) => ({
+    sentences: orderedSentences.map((s) => ({
       id: s.item_id, text: s.text, ko: s.ko,
       blankWord: s.blank_word, distractors: s.distractors,
     })),
+    candidates,
   };
 }
 

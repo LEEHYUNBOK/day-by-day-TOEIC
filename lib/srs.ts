@@ -4,7 +4,6 @@ import { addDays } from './date';
 export interface CardIdentity {
   itemId: string;
   type: QuizType;
-  sourceDate: string;
 }
 
 export interface SrsUpdate {

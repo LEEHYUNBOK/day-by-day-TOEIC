@@ -23,7 +23,7 @@ export function buildQueue(
     .slice()
     .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
     .slice(0, size)
-    .map((c) => ({ itemId: c.itemId, type: c.type, sourceDate: c.sourceDate }));
+    .map((c) => ({ itemId: c.itemId, type: c.type }));
 
   const seen = new Set(cards.map((c) => cardKey(c.type, c.itemId)));
   const fresh: CardIdentity[] = [];

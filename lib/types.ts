@@ -6,11 +6,6 @@ export interface Sentence {
   id: string; text: string; ko: string;
   blankWord: string; distractors: string[];
 }
-export interface DayContent {
-  date: string; title: string; words: Word[]; sentences: Sentence[];
-}
-export interface DayIndexEntry { date: string; title: string; }
-
 export type QuizType = 'word' | 'blank' | 'arrange';
 
 export type Box = 0 | 1 | 2 | 3;
@@ -18,7 +13,6 @@ export type Box = 0 | 1 | 2 | 3;
 export interface SrsCard {
   itemId: string;      // 'w-negotiate' 또는 's-0804-1'
   type: QuizType;
-  sourceDate: string;  // 이 항목이 든 day 파일의 날짜 (원문 조회용)
   box: Box;
   dueDate: string;     // YYYY-MM-DD, 이 날부터 출제 대상
 }

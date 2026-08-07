@@ -7,10 +7,10 @@ const TODAY = '2026-08-06';
 // 셔플을 결정적으로 만들되 정지 상태로 두지 않는 rng
 const rng = () => { let i = 0; return () => ((i = (i + 3) % 7) / 7); };
 
-const cand = (itemId: string, type: QuizType = 'word', sourceDate = '2026-08-04') =>
-  ({ itemId, type, sourceDate });
+const cand = (itemId: string, type: QuizType = 'word') =>
+  ({ itemId, type });
 const card = (itemId: string, dueDate: string, type: QuizType = 'word'): SrsCard =>
-  ({ itemId, type, sourceDate: '2026-08-04', box: 1, dueDate });
+  ({ itemId, type, box: 1, dueDate });
 
 const keys = (items: { itemId: string; type: QuizType }[]) =>
   items.map((i) => cardKey(i.type, i.itemId)).sort();

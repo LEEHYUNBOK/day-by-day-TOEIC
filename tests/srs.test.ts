@@ -3,7 +3,7 @@ import { cardKey, nextState, DUE_DAYS } from '@/lib/srs';
 import type { SrsCard, Box } from '@/lib/types';
 
 const TODAY = '2026-08-06';
-const id = { itemId: 'w-negotiate', type: 'word' as const, sourceDate: '2026-08-04' };
+const id = { itemId: 'w-negotiate', type: 'word' as const };
 const card = (box: Box, dueDate = TODAY): SrsCard => ({ ...id, box, dueDate });
 
 describe('cardKey', () => {
@@ -63,9 +63,9 @@ describe('nextState — wrong answers', () => {
 
 describe('nextState — identity and dates', () => {
   it('carries identity from the identity argument, not the old card', () => {
-    const stale: SrsCard = { itemId: 'w-old', type: 'blank', sourceDate: '2026-01-01', box: 1, dueDate: TODAY };
+    const stale: SrsCard = { itemId: 'w-old', type: 'blank', box: 1, dueDate: TODAY };
     const r = nextState(stale, true, TODAY, id);
-    expect(r.card).toMatchObject({ itemId: 'w-negotiate', type: 'word', sourceDate: '2026-08-04' });
+    expect(r.card).toMatchObject({ itemId: 'w-negotiate', type: 'word' });
   });
   it('computes dueDate from today, crossing a month boundary', () => {
     const r = nextState(card(2), true, '2026-08-31', id);

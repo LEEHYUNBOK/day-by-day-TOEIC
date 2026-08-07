@@ -9,7 +9,7 @@ import type { SrsCard, SessionRecord, QuizType } from '@/lib/types';
 const TODAY = '2026-08-06';
 const NOW = '2026-08-06T10:00:00.000Z';
 const ident = (itemId: string, type: QuizType = 'word') =>
-  ({ itemId, type, sourceDate: '2026-08-04' });
+  ({ itemId, type });
 
 beforeEach(() => localStorage.clear());
 
@@ -40,8 +40,8 @@ describe('empty and corrupted storage', () => {
 
 describe('findCard', () => {
   const cards: SrsCard[] = [
-    { itemId: 's-1', type: 'blank', sourceDate: '2026-08-04', box: 1, dueDate: TODAY },
-    { itemId: 's-1', type: 'arrange', sourceDate: '2026-08-04', box: 2, dueDate: TODAY },
+    { itemId: 's-1', type: 'blank', box: 1, dueDate: TODAY },
+    { itemId: 's-1', type: 'arrange', box: 2, dueDate: TODAY },
   ];
   it('matches on both type and itemId', () => {
     expect(findCard(cards, 'arrange', 's-1')!.box).toBe(2);
@@ -168,7 +168,7 @@ describe('calcStreak', () => {
 
 describe('countDueOn', () => {
   const c = (itemId: string, dueDate: string): SrsCard =>
-    ({ itemId, type: 'word', sourceDate: '2026-08-04', box: 1, dueDate });
+    ({ itemId, type: 'word', box: 1, dueDate });
   it('counts cards due on or before the given date', () => {
     const cards = [c('a', '2026-08-05'), c('b', '2026-08-07'), c('c', '2026-08-20')];
     expect(countDueOn(cards, '2026-08-07')).toBe(2);

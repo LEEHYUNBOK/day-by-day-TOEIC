@@ -3,17 +3,19 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Nav from '@/components/Nav';
-import { fetchIndex, fetchDay } from '@/lib/contentRepo';
+import { fetchContent, type ContentBundle } from '@/lib/contentRepo';
 import { getCards, getMastered } from '@/lib/srsRepo';
 import { cardKey } from '@/lib/srs';
 import { todayStr } from '@/lib/date';
-import type { Box, QuizType, SrsCard, MasteredItem, DayContent, DayIndexEntry } from '@/lib/types';
+import type { Box, QuizType, SrsCard, MasteredItem } from '@/lib/types';
 
 interface LoadedState {
   cards: SrsCard[];
   mastered: MasteredItem[];
-  dayContentByDate: Map<string, DayContent | null>;
+  bundle: ContentBundle;
 }
+
+type LoadState = { status: 'loading' } | { status: 'error' } | { status: 'ready'; data: LoadedState };
 
 const BOX_LABEL: Record<Box, string> = {
   0: '기초 단계',
@@ -27,59 +29,39 @@ const TYPE_LABEL: Record<QuizType, string> = {
   arrange: '문장 조합',
 };
 
-// SrsCard는 sourceDate를 들고 있으므로 그 날짜의 콘텐츠에서만 찾는다.
-function resolveBySourceDate(
+function resolveLabel(
   type: QuizType,
   itemId: string,
-  sourceDate: string,
-  dayContentByDate: Map<string, DayContent | null>,
+  wordById: Map<string, ContentBundle['words'][number]>,
+  sentenceById: Map<string, ContentBundle['sentences'][number]>,
 ): string | null {
-  const day = dayContentByDate.get(sourceDate);
-  if (!day) return null;
   if (type === 'word') {
-    const word = day.words.find((w) => w.id === itemId);
+    const word = wordById.get(itemId);
     return word ? `${word.word} — ${word.meaning}` : null;
   }
-  const sentence = day.sentences.find((s) => s.id === itemId);
+  const sentence = sentenceById.get(itemId);
   return sentence ? sentence.text : null;
 }
 
-// MasteredItem에는 sourceDate가 없으므로 전체 날짜를 훑어 itemId로 찾는다.
-function resolveByScanningAllDays(
-  type: QuizType,
-  itemId: string,
-  dayContentByDate: Map<string, DayContent | null>,
-): string | null {
-  for (const day of dayContentByDate.values()) {
-    if (!day) continue;
-    if (type === 'word') {
-      const word = day.words.find((w) => w.id === itemId);
-      if (word) return `${word.word} — ${word.meaning}`;
-    } else {
-      const sentence = day.sentences.find((s) => s.id === itemId);
-      if (sentence) return sentence.text;
-    }
-  }
-  return null;
-}
-
 export default function VocabPage() {
-  const [state, setState] = useState<LoadedState | null>(null);
+  const [state, setState] = useState<LoadState>({ status: 'loading' });
 
   useEffect(() => {
     let cancelled = false;
-    fetchIndex().then(async (index: DayIndexEntry[]) => {
-      const contents = await Promise.all(index.map((d) => fetchDay(d.date)));
+    fetchContent().then((bundle) => {
       if (cancelled) return;
-      const dayContentByDate = new Map(index.map((d, i) => [d.date, contents[i]] as const));
-      setState({ cards: getCards(), mastered: getMastered(), dayContentByDate });
+      if (bundle === null) {
+        setState({ status: 'error' });
+        return;
+      }
+      setState({ status: 'ready', data: { cards: getCards(), mastered: getMastered(), bundle } });
     });
     return () => {
       cancelled = true;
     };
   }, []);
 
-  if (!state) {
+  if (state.status === 'loading') {
     return (
       <div className="flex flex-1 flex-col">
         <Nav />
@@ -90,7 +72,26 @@ export default function VocabPage() {
     );
   }
 
-  const { cards, mastered, dayContentByDate } = state;
+  if (state.status === 'error') {
+    return (
+      <div className="flex flex-1 flex-col">
+        <Nav />
+        <div className="flex flex-1 flex-col items-center bg-zinc-50 p-4 dark:bg-black">
+          <div className="w-full max-w-xl py-8">
+            <h1 className="mb-6 text-2xl font-bold">내 단어장</h1>
+            <div className="rounded-2xl border border-gray-200 p-6 text-center dark:border-gray-800">
+              <p className="mb-2 text-xl font-semibold">불러오지 못했어요</p>
+              <p className="text-gray-500 dark:text-gray-400">네트워크 상태를 확인하고 다시 시도해주세요</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { cards, mastered, bundle } = state.data;
+  const wordById = new Map(bundle.words.map((w) => [w.id, w]));
+  const sentenceById = new Map(bundle.sentences.map((s) => [s.id, s]));
 
   if (cards.length === 0 && mastered.length === 0) {
     return (
@@ -132,7 +133,7 @@ export default function VocabPage() {
             ) : (
               <div className="flex flex-col gap-3">
                 {sortedCards.map((card) => {
-                  const label = resolveBySourceDate(card.type, card.itemId, card.sourceDate, dayContentByDate);
+                  const label = resolveLabel(card.type, card.itemId, wordById, sentenceById);
                   const dueToday = card.dueDate <= today;
                   return (
                     <div
@@ -179,7 +180,7 @@ export default function VocabPage() {
             ) : (
               <div className="flex flex-col gap-3">
                 {sortedMastered.map((item, i) => {
-                  const label = resolveByScanningAllDays(item.type, item.itemId, dayContentByDate);
+                  const label = resolveLabel(item.type, item.itemId, wordById, sentenceById);
                   return (
                     <div
                       key={`${cardKey(item.type, item.itemId)}-${i}`}
