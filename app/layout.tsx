@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "day-by-day TOEIC",
-  description: "매일 20문항씩 토익 단어와 문장을 간격 반복으로 외우는 앱.",
+  description: "매일 10문항씩 토익 단어와 문장을 간격 반복으로 외우는 앱.",
   manifest: "/manifest.json",
   // iOS 는 매니페스트의 name 이 아니라 apple-mobile-web-app-title 을 홈화면 이름으로 쓴다.
   appleWebApp: {

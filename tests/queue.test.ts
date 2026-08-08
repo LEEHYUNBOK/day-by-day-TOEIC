@@ -16,7 +16,7 @@ const keys = (items: { itemId: string; type: QuizType }[]) =>
   items.map((i) => cardKey(i.type, i.itemId)).sort();
 
 describe('SESSION_SIZE', () => {
-  it('is 20', () => expect(SESSION_SIZE).toBe(20));
+  it('is 10', () => expect(SESSION_SIZE).toBe(10));
 });
 
 describe('buildQueue — new items only', () => {

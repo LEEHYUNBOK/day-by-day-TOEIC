@@ -3,7 +3,7 @@ import { cardKey, type CardIdentity } from './srs';
 import { shuffle } from './quiz';
 
 /** 한 판의 문항 수 */
-export const SESSION_SIZE = 20;
+export const SESSION_SIZE = 10;
 
 /**
  * 한 판에 낼 항목을 고른다.

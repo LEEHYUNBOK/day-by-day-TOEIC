@@ -2,7 +2,7 @@
   "id": "/",
   "name": "day-by-day TOEIC",
   "short_name": "토익 단어",
-  "description": "매일 20문항씩 토익 단어와 문장을 간격 반복으로 외우는 앱.",
+  "description": "매일 10문항씩 토익 단어와 문장을 간격 반복으로 외우는 앱.",
   "lang": "ko",
   "start_url": "/",
   "scope": "/",
