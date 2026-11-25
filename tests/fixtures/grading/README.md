@@ -1,0 +1,1 @@
+Manual-check fixture for the `/채점` command. Copy `questions/` and `study/` into `data/` only for a manual run, then delete the copies afterwards. The question id is a fake 9001 on purpose. If it is left in `data/questions/`, `createQuestion`'s max+1 would continue from 9001.
