@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import Nav from "@/components/Nav";
 
 export const metadata: Metadata = {
   title: "데일리 CS",
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
+        <Nav />
         {children}
       </body>
     </html>
