@@ -14,6 +14,7 @@ import { POST as postQuestion } from '@/app/api/questions/route';
 import { POST as postAttempt, PATCH as patchAttempt } from '@/app/api/attempts/route';
 import { POST as submit } from '@/app/api/attempts/submit/route';
 import { POST as postAudio } from '@/app/api/audio/route';
+import { PUT as putRetro } from '@/app/api/retro/route';
 
 const json = (url: string, method: string, body: unknown) =>
   new NextRequest(`http://x${url}`, {
@@ -92,5 +93,17 @@ describe('write APIs', () => {
     expect((await postAudio(req('study/2026-01-01/none.md', [1]))).status).toBe(404);
     const big = new NextRequest(`http://x/api/audio?path=${encodeURIComponent(p)}`, { method: 'POST', body: new Uint8Array(1), headers: { 'content-length': String(51 * 1024 * 1024) } });
     expect((await postAudio(big)).status).toBe(413);
+  });
+});
+
+describe('PUT /api/retro', () => {
+  it('writes, rejects bad date (400) and non-JSON (415)', async () => {
+    const v = { read: 'r', dev: 'd', retro: 'x' };
+    expect((await putRetro(json('/api/retro', 'PUT', { date: '2026-11-25', ...v }))).status).toBe(200);
+    expect(fs.readFileSync(path.join(tmp, 'study/2026-11-25.md'), 'utf8')).toContain('## 회고\nx');
+    expect((await putRetro(json('/api/retro', 'PUT', { date: '../x', ...v }))).status).toBe(400);
+    expect((await putRetro(json('/api/retro', 'PUT', { date: '2026-11-25', read: 1, dev: '', retro: '' }))).status).toBe(400);
+    const t = new NextRequest('http://x/api/retro', { method: 'PUT', body: '{}', headers: { 'content-type': 'text/plain' } });
+    expect((await putRetro(t)).status).toBe(415);
   });
 });
