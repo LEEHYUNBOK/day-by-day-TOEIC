@@ -18,6 +18,23 @@ describe('frontmatter', () => {
     expect(parse(stringify({ a: 1 }, '## x\nhi\n')).body).toBe('## x\nhi\n');
     expect(parse('no frontmatter')).toEqual({ data: {}, body: 'no frontmatter' });
   });
+  it('keeps unknown ## lines inside a section', () => {
+    const body = '## 공부 메모\n메모\n\n## 내 설명\n설명\n\n## 채점 결과\n결과\n';
+    const text = '글\n\n## 소제목\n내용';
+    const b2 = setSection(body, '내 설명', text);
+    expect(getSection(b2, '내 설명')).toBe(text);
+    expect(getSection(b2, '채점 결과')).toBe('결과');
+    expect(getSection(b2, '공부 메모')).toBe('메모');
+    const b3 = setSection(b2, '내 설명', '새');
+    expect(getSection(b3, '내 설명')).toBe('새');
+    expect(b3).not.toContain('소제목');
+    expect(getSection(b3, '채점 결과')).toBe('결과');
+  });
+  it('handles CRLF after parse', () => {
+    const { body } = parse('---\r\na: 1\r\n---\r\n## 내 설명\r\n설명\r\n\r\n## 회고\r\n끝\r\n');
+    expect(getSection(body, '내 설명')).toBe('설명');
+    expect(getSection(body, '회고')).toBe('끝');
+  });
   it('reads and replaces sections', () => {
     const body = '## 공부 메모\n메모\n\n## 내 설명\n설명\n';
     expect(getSection(body, '내 설명')).toBe('설명');
