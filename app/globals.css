@@ -1,22 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  /* 페이지 콘텐츠(bg-zinc-50)와 동일하게 맞춰 내비게이션 아래 이음매·로딩→로드 전환 시
-     배경 깜빡임이 생기지 않게 한다. */
-  --background: #fafafa;
-  --foreground: #171717;
+  /* 종이 톤 단일 테마. 카드(#fbf9f4)·풀이 화면(StudyRunner)과 같은 계열이다. */
+  --background: #f5f2ea;
+  --foreground: #1c1a17;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000;
-    --foreground: #ededed;
-  }
 }
 
 body {

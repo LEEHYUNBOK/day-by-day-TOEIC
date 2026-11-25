@@ -15,9 +15,9 @@ export default function Nav() {
   const pathname = usePathname();
   if (pathname.startsWith('/study')) return null;
   return (
-    <nav className="flex gap-4 border-b border-zinc-200 px-4 py-3 text-sm font-semibold dark:border-zinc-800">
+    <nav className="flex gap-4 border-b border-[#1c1a17]/20 px-4 py-3 text-sm font-semibold">
       {LINKS.map((l) => (
-        <Link key={l.href} href={l.href} className={pathname === l.href ? 'text-blue-600' : 'text-zinc-600 dark:text-zinc-300'}>
+        <Link key={l.href} href={l.href} className={pathname === l.href ? 'text-blue-600' : 'text-zinc-600'}>
           {l.label}
         </Link>
       ))}
