@@ -108,15 +108,24 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
     });
   };
 
-  const save = useCallback(async (): Promise<boolean> => {
-    if (dead.current) return false;
+  const submitting = useRef(false);
+  const deb = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // background=true(디바운스·30초 자동저장)는 409 에서 알림 없이 조용히 멈춘다.
+  const save = useCallback(async (background = false): Promise<boolean> => {
+    if (dead.current || (background && submitting.current)) return false;
     const sent = snap(live.current);
-    const res = await fetch('/api/attempts', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: patchBody() });
+    let res: Response;
+    try {
+      res = await fetch('/api/attempts', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: patchBody() });
+    } catch {
+      return false; // 네트워크 오류: saved 를 그대로 둬서 다음 입력 때 다시 시도
+    }
     if (res.status === 409) {
       if (!dead.current) {
         dead.current = true;
         setRunning(false);
-        alert('이미 제출된 기록입니다');
+        if (!background) alert('이미 제출된 기록입니다');
         router.refresh();
       }
       return false;
@@ -129,7 +138,10 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
   // 타이머가 멈춰 있어도 입력은 1.5초 뒤 저장한다.
   useEffect(() => {
     if (!draft || snap(live.current) === saved.current) return;
-    const t = setTimeout(() => void save(), 1500);
+    const t = setTimeout(() => {
+      if (snap(live.current) !== saved.current) void save(true);
+    }, 1500);
+    deb.current = t;
     return () => clearTimeout(t);
   }, [draft, memo, links, mine, explanation, tab, save]);
 
@@ -149,7 +161,7 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
     if (!running || !draft) return;
     base.current.startedAt = Date.now();
     const tick = setInterval(() => setSeconds(elapsed()), 1000);
-    const autosave = setInterval(() => void save(), 30000);
+    const autosave = setInterval(() => void save(true), 30000);
     return () => {
       clearInterval(tick);
       clearInterval(autosave);
@@ -292,9 +304,12 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
   };
 
   const submit = async () => {
+    submitting.current = true;
+    if (deb.current) clearTimeout(deb.current);
     setBusy(true);
     setRunning(false);
     await new Promise((r) => setTimeout(r));
+    let done = false;
     try {
       if (!(await save())) return;
       const res = await post('/api/attempts/submit', {
@@ -310,8 +325,10 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
         alert('제출하지 못했어요. 다시 시도해 주세요');
         return;
       }
+      done = true;
       router.refresh();
     } finally {
+      if (!done) submitting.current = false; // 실패하면 자동저장 재개
       setBusy(false);
     }
   };

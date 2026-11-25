@@ -32,6 +32,7 @@ export default async function StudyPage({ searchParams }: { searchParams: Promis
   const followups = attempt.followups.map((id) => ({ id, text: readQuestion(DATA_ROOT, id)?.text ?? id }));
   return (
     <StudyRunner
+      key={attempt.path}
       attempt={attempt}
       question={question}
       score={attemptScore(attempt)}
