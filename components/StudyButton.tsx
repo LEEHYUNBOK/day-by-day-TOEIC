@@ -12,8 +12,8 @@ export default function StudyButton({ questionId }: { questionId: string }) {
     setErr('');
     try {
       const res = await fetch('/api/attempts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ questionId }) });
-      const j = await res.json();
-      if (!res.ok) throw new Error(j.error ?? '시작하지 못했어요');
+      const j = await res.json().catch(() => null);
+      if (!res.ok || !j?.attempt) throw new Error(j?.error ?? `요청을 처리하지 못했어요 (${res.status})`);
       router.push(`/study?a=${encodeURIComponent(j.attempt.path)}`);
     } catch (e) {
       setErr((e as Error).message);

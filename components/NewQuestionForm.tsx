@@ -13,7 +13,7 @@ export default function NewQuestionForm({ topics }: { topics: string[] }) {
   const [from, setFrom] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
-  const [done, setDone] = useState<{ id: string; created: boolean } | null>(null);
+  const [done, setDone] = useState<{ id: string; text: string; created: boolean } | null>(null);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,9 +26,9 @@ export default function NewQuestionForm({ topics }: { topics: string[] }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, topic, source, from: from.trim() || undefined }),
       });
-      const j = await res.json();
-      if (!res.ok) throw new Error(j.error ?? '추가하지 못했어요');
-      setDone({ id: j.question.id, created: j.created });
+      const j = await res.json().catch(() => null);
+      if (!res.ok || !j?.question) throw new Error(j?.error ?? `요청을 처리하지 못했어요 (${res.status})`);
+      setDone({ id: j.question.id, text: j.question.text, created: j.created });
       if (j.created) { setText(''); setFrom(''); }
     } catch (e) {
       setErr((e as Error).message);
@@ -65,7 +65,11 @@ export default function NewQuestionForm({ topics }: { topics: string[] }) {
       </form>
       {done && (
         <div role="status" className="mt-4 flex items-center justify-between gap-3 rounded-lg border-2 border-[#1c1a17] p-3 text-sm">
-          <span>{done.created ? `추가했어요 (${done.id})` : '이미 있는 질문입니다'} · <Link href="/bank" className="text-blue-600 underline">질문 목록</Link></span>
+          <span>
+            <b>{done.created ? `추가했어요 (${done.id})` : '이미 있는 질문입니다'}</b>
+            <span className="block">{done.text}</span>
+            <Link href="/bank" className="text-blue-600 underline">질문 목록</Link>
+          </span>
           <StudyButton questionId={done.id} />
         </div>
       )}

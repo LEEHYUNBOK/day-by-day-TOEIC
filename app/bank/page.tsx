@@ -14,10 +14,10 @@ export default async function BankPage({ searchParams }: { searchParams: Promise
   await connection(); // 파일을 읽으므로 요청마다 렌더
   const sp = await searchParams;
   const one = (k: string) => (typeof sp[k] === 'string' ? (sp[k] as string) : '');
-  const topic = one('topic');
+  const topic = one('topic').normalize('NFC');
   const source = one('source');
   const exp = one('exp') === '1';
-  const sort: Sort = one('sort') in SORTS ? (one('sort') as Sort) : 'todo';
+  const sort: Sort = Object.hasOwn(SORTS, one('sort')) ? (one('sort') as Sort) : 'todo';
 
   const all = listQuestions(DATA_ROOT);
   const attempts = listAttempts(DATA_ROOT);
