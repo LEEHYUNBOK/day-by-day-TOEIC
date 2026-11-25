@@ -1,0 +1,1 @@
+var CFG = {"title":"A","open":{"t":"자기소개"},"bank":[{"no":"01","t":"OS","q":"프로세스와 스레드?","a":"<b>공유</b> <code>x</code>","mine":"m","pri":false},{"no":"01","t":"OS","q":"뮤텍스?","a":"","mine":"","pri":false}]};
