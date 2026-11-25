@@ -49,6 +49,8 @@ const LABELS = {
   },
 };
 
+const NET_ERR = '저장하지 못했어요. 서버가 켜져 있는지 확인해 주세요.';
+
 const post = (url: string, body: unknown) =>
   fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
 
@@ -119,6 +121,7 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
     try {
       res = await fetch('/api/attempts', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: patchBody() });
     } catch {
+      if (!background) alert(NET_ERR);
       return false; // 네트워크 오류: saved 를 그대로 둬서 다음 입력 때 다시 시도
     }
     if (res.status === 409) {
@@ -131,6 +134,7 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
       return false;
     }
     if (res.ok) saved.current = sent;
+    else if (!background) alert(((await res.json().catch(() => null)) as { error?: string } | null)?.error ?? '저장하지 못했어요');
     return res.ok;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attempt.path, router]);
@@ -312,17 +316,23 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
     let done = false;
     try {
       if (!(await save())) return;
-      const res = await post('/api/attempts/submit', {
-        path: attempt.path,
-        explanation,
-        mode: tab,
-        self: { concept, tradeoff },
-        mine,
-      });
+      let res: Response;
+      try {
+        res = await post('/api/attempts/submit', {
+          path: attempt.path,
+          explanation,
+          mode: tab,
+          self: { concept, tradeoff },
+          mine,
+        });
+      } catch {
+        alert(NET_ERR);
+        return;
+      }
       if (res.status === 409) {
         alert('이미 제출된 기록입니다');
       } else if (!res.ok) {
-        alert('제출하지 못했어요. 다시 시도해 주세요');
+        alert(((await res.json().catch(() => null)) as { error?: string } | null)?.error ?? '제출하지 못했어요. 다시 시도해 주세요');
         return;
       }
       done = true;

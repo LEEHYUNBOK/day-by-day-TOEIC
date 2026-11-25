@@ -42,3 +42,4 @@ next-env.d.ts
 
 # study recordings
 data/**/*.webm
+data/**/*.tmp-*

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { parse, stringify, getSection, setSection } from './frontmatter.mjs';
+import { parse, stringify, getSection, setSection, SECTIONS } from './frontmatter.mjs';
 import { readQuestion } from './questions.mjs';
 import type { Attempt, Rubric, Status } from './types';
 
@@ -12,6 +12,15 @@ export class ValidationError extends Error {
 }
 export class BadPathError extends Error {
   constructor() { super('bad attempt path'); this.name = 'BadPathError'; }
+}
+
+// A user line equal to "## <section>" would be read back as a section boundary and lose data.
+export function assertNoSectionHeading(...texts: (string | undefined)[]): void {
+  for (const t of texts) {
+    for (const line of (t ?? '').split(/\r?\n/)) {
+      if (SECTIONS.some((s) => line.trimEnd() === `## ${s}`)) throw new ValidationError(`'${line.trim()}' 같은 제목 줄은 쓸 수 없어요`);
+    }
+  }
 }
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -140,6 +149,7 @@ function loadDraft(root: string, p: string) {
 
 export function saveDraft(root: string, p: string, patch: Patch): Attempt {
   const { n, file, data, body: b0 } = loadDraft(root, p);
+  assertNoSectionHeading(patch.memo, patch.explanation, patch.mine);
   let body = b0;
   if (patch.seconds !== undefined) {
     if (!Number.isFinite(patch.seconds) || patch.seconds < 0) throw new ValidationError('invalid seconds');
@@ -160,6 +170,7 @@ export function submitAttempt(
   input: { explanation: string; mode: 'write' | 'voice'; self: Rubric; mine?: string },
 ): Attempt {
   const { n, file, data, body: b0 } = loadDraft(root, p);
+  assertNoSectionHeading(input.explanation, input.mine);
   const explanation = input.explanation.trim();
   if (!explanation) throw new ValidationError('explanation is empty');
   if (!CONCEPT.includes(input.self?.concept) || !TRADEOFF.includes(input.self?.tradeoff)) throw new ValidationError('invalid self score');

@@ -6,7 +6,7 @@ import path from 'node:path';
 import { createQuestion } from '@/lib/questions.mjs';
 import {
   today, assertAttemptPath, listAttempts, readAttempt, attemptOrder, startAttempt,
-  saveDraft, submitAttempt, audioPathFor, NotDraftError, BadPathError,
+  saveDraft, submitAttempt, audioPathFor, NotDraftError, BadPathError, ValidationError,
 } from '@/lib/attempts';
 
 let tmp: string;
@@ -33,6 +33,14 @@ describe('attempts', () => {
     expect(s).toMatchObject({ status: 'pending', self_score: 80, minutes: 75, memo: 'm', mode: 'voice', links: ['https://x.io/a?b=1'] });
     expect(fs.readFileSync(path.join(tmp, a.path), 'utf8')).not.toContain('seconds');
     expect(readAttempt(tmp, a.path)).toEqual(s);
+  });
+  it('rejects section-heading lines in user text', () => {
+    const a = startAttempt(tmp, qid, '2026-11-25');
+    expect(() => saveDraft(tmp, a.path, { memo: 'a\n## 회고  \nb' })).toThrow(ValidationError);
+    expect(() => saveDraft(tmp, a.path, { explanation: '## 내 설명' })).toThrow(ValidationError);
+    expect(() => submitAttempt(tmp, a.path, { explanation: 'x', mode: 'write', self: { concept: 0, tradeoff: 0 }, mine: '## 채점 결과' })).toThrow(ValidationError);
+    saveDraft(tmp, a.path, { memo: '## 다른 제목' });
+    expect(readAttempt(tmp, a.path)!.memo).toBe('## 다른 제목');
   });
   it('saveDraft refuses non-draft', () => {
     const a = startAttempt(tmp, qid, '2026-11-25');

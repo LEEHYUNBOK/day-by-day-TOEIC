@@ -11,6 +11,8 @@ export const bad = (message: string) => new HttpError(400, message);
 // errors to statuses, logs and 500s the rest.
 export async function respond(req: Request, fn: () => Promise<unknown> | unknown): Promise<NextResponse> {
   try {
+    const host = req.headers.get('host');
+    if (host !== null && !['127.0.0.1', 'localhost'].includes(host.replace(/:\d+$/, ''))) throw new HttpError(403, 'bad host');
     const site = req.headers.get('sec-fetch-site');
     if (site !== null && site !== 'same-origin' && site !== 'none') throw new HttpError(403, 'cross-site request refused');
     return NextResponse.json(await fn());

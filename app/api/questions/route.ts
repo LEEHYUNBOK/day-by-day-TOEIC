@@ -3,7 +3,7 @@ import { createQuestion } from '@/lib/questions.mjs';
 import { today } from '@/lib/attempts';
 import { bad, nonEmpty, readJson, respond } from '@/lib/api';
 
-const SOURCES = ['real', 'mock', 'self', 'followup'] as const;
+const SOURCES = ['real', 'mock', 'self'] as const;
 const KINDS = ['concept', 'experience'] as const;
 
 export function POST(req: Request) {

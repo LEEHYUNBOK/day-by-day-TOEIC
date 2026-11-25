@@ -26,6 +26,12 @@ const json = (url: string, method: string, body: unknown) =>
 describe('request guards', () => {
   const body = JSON.stringify({ text: 'g', topic: 't', source: 'mock' });
   const mk = (headers: Record<string, string>) => new NextRequest('http://x/api/questions', { method: 'POST', body, headers });
+  it('403 on foreign host (DNS rebinding), ok on localhost/127.0.0.1', async () => {
+    const j = { 'content-type': 'application/json' };
+    expect((await postQuestion(mk({ ...j, host: 'evil.example:3000' }))).status).toBe(403);
+    expect((await postQuestion(mk({ ...j, host: 'localhost:3000' }))).status).toBe(200);
+    expect((await postQuestion(mk({ ...j, host: '127.0.0.1:3000' }))).status).toBe(200);
+  });
   it('415 on non-JSON content type', async () => {
     expect((await postQuestion(mk({ 'content-type': 'text/plain' }))).status).toBe(415);
   });
@@ -77,6 +83,7 @@ describe('write APIs', () => {
     expect((await patchAttempt(json('/api/attempts', 'PATCH', { path: 'study/2026-01-01/none.md', patch: {} }))).status).toBe(404);
     expect((await postQuestion(json('/api/questions', 'POST', { text: '', topic: 't', source: 'mock' }))).status).toBe(400);
     expect((await postQuestion(json('/api/questions', 'POST', { text: 'a', topic: 't', source: 'bad' }))).status).toBe(400);
+    expect((await postQuestion(json('/api/questions', 'POST', { text: 'a', topic: 't', source: 'followup' }))).status).toBe(400);
     expect((await postQuestion(json('/api/questions', 'POST', '{bad'))).status).toBe(400);
     expect((await postAttempt(json('/api/attempts', 'POST', { questionId: 'nope' }))).status).toBe(404);
   });
