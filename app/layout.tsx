@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "day-by-day TOEIC",
-  description: "매일 10문항씩 토익 단어와 문장을 간격 반복으로 외우는 앱.",
+  title: "데일리 CS",
+  description: "면접 질문을 매일 공부하고 설명해 이해도를 기록하는 앱.",
   manifest: "/manifest.json",
   // iOS 는 매니페스트의 name 이 아니라 apple-mobile-web-app-title 을 홈화면 이름으로 쓴다.
   appleWebApp: {
     capable: true,
-    title: "토익 단어",
+    title: "데일리 CS",
     statusBarStyle: "default",
   },
 };

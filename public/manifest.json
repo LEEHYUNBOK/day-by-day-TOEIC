@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "day-by-day TOEIC",
-  "short_name": "토익 단어",
-  "description": "매일 10문항씩 토익 단어와 문장을 간격 반복으로 외우는 앱.",
+  "name": "데일리 CS",
+  "short_name": "데일리 CS",
+  "description": "면접 질문을 매일 공부하고 설명해 이해도를 기록하는 앱.",
   "lang": "ko",
   "start_url": "/",
   "scope": "/",
