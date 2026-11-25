@@ -2,6 +2,8 @@
 export const SELF_COLOR = '#b4540a';
 export const AI_COLOR = '#2a7fbf';
 const INK = '#1c1a17';
+const clamp = (v: number) => Math.min(100, Math.max(0, v));
+const cut = (t: string, n = 8) => (t.length > n ? `${t.slice(0, n)}…` : t);
 
 export function BarChart({ rows }: { rows: { label: string; value: number; n: number }[] }) {
   const rowH = 30;
@@ -12,11 +14,11 @@ export function BarChart({ rows }: { rows: { label: string; value: number; n: nu
     <svg viewBox={`0 0 ${W} ${rows.length * rowH + 4}`} className="w-full" role="img" aria-label="토픽별 평균 점수">
       {rows.map((r, i) => {
         const y = i * rowH + 4;
-        const w = Math.max(2, (r.value / 100) * barW);
+        const w = Math.max(2, (clamp(r.value) / 100) * barW);
         return (
           <g key={r.label}>
             <title>{`${r.label}: 평균 ${r.value}점 (질문 ${r.n}개)`}</title>
-            <text x={labelW - 8} y={y + 15} textAnchor="end" fontSize="13" fill={INK}>{r.label}</text>
+            <text x={labelW - 8} y={y + 15} textAnchor="end" fontSize="13" fill={INK}>{cut(r.label)}</text>
             <rect x={labelW} y={y} width={barW} height={20} rx={4} fill={INK} opacity={0.07} />
             <rect x={labelW} y={y} width={w} height={20} rx={4} fill={AI_COLOR} />
             <text x={labelW + barW + 8} y={y + 15} fontSize="13" fontWeight="700" fill={INK}>{r.value}점 <tspan fontWeight="400" opacity={0.6}>n={r.n}</tspan></text>
@@ -32,7 +34,7 @@ export type LinePoint = { label: string; self: number | null; ai: number | null 
 export function LineChart({ points }: { points: LinePoint[] }) {
   const W = 560, H = 220, L = 36, R = 16, T = 12, B = 30;
   const x = (i: number) => (points.length === 1 ? (L + W - R) / 2 : L + (i / (points.length - 1)) * (W - L - R));
-  const y = (v: number) => T + (1 - v / 100) * (H - T - B);
+  const y = (v: number) => T + (1 - clamp(v) / 100) * (H - T - B);
   const series = [
     { name: '자기점수', color: SELF_COLOR, key: 'self' as const },
     { name: 'AI 점수', color: AI_COLOR, key: 'ai' as const },
@@ -45,7 +47,7 @@ export function LineChart({ points }: { points: LinePoint[] }) {
           <text x={L - 6} y={y(v) + 4} textAnchor="end" fontSize="11" fill={INK} opacity={0.7}>{v}</text>
         </g>
       ))}
-      {points.map((p, i) => (
+      {points.map((p, i) => (i === points.length - 1 || (i % Math.ceil(points.length / 6) === 0 && points.length - 1 - i >= Math.ceil(points.length / 6) / 2)) && (
         <text key={i} x={x(i)} y={H - 10} textAnchor="middle" fontSize="11" fill={INK} opacity={0.7}>{p.label}</text>
       ))}
       {series.map((s) => {

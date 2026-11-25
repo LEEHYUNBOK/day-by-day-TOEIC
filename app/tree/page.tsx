@@ -28,7 +28,7 @@ export default async function TreePage() {
     ) : (
       <li key={n.q.id}>
         <details open className="py-2">
-          <summary className="cursor-pointer">{row(n)}</summary>
+          <summary className="flex cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden"><span aria-hidden className="w-3 text-xs">▾</span><span className="min-w-0 flex-1">{row(n)}</span></summary>
           <ul className="ml-4 border-l-2 border-[#1c1a17]/30 pl-2">{n.children.map(node)}</ul>
         </details>
       </li>
