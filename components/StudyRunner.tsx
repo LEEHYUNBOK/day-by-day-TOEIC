@@ -81,7 +81,8 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
   const [extra, setExtra] = useState<Extra>('memo');
   const [concept, setConcept] = useState<number | null>(null);
   const [tradeoff, setTradeoff] = useState<number | null>(null);
-  const [recording, setRecording] = useState(false);
+  const [recState, setRecState] = useState<'idle' | 'pending' | 'rec'>('idle');
+  const recording = recState !== 'idle';
   const [uploading, setUploading] = useState(false);
   const [notice, setNotice] = useState('');
   const [interim, setInterim] = useState('');
@@ -95,26 +96,57 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
   });
   const elapsed = () => base.current.seconds + (base.current.startedAt ? (Date.now() - base.current.startedAt) / 1000 : 0);
 
-  const save = useCallback(async (): Promise<boolean> => {
+  const snap = (l: typeof live.current) => JSON.stringify([l.memo, l.links, l.mine, l.explanation, l.tab]);
+  const saved = useRef(JSON.stringify([attempt.memo, attempt.links, attempt.mine, attempt.explanation, attempt.mode ?? 'write']));
+  const dead = useRef(false); // 409 를 받으면 true: 이후 저장·알림 없음
+
+  const patchBody = () => {
     const l = live.current;
-    const res = await fetch('/api/attempts', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        path: attempt.path,
-        patch: { seconds: elapsed(), memo: l.memo, links: l.links, explanation: l.explanation, mine: l.mine, mode: l.tab },
-      }),
+    return JSON.stringify({
+      path: attempt.path,
+      patch: { seconds: elapsed(), memo: l.memo, links: l.links, explanation: l.explanation, mine: l.mine, mode: l.tab },
     });
+  };
+
+  const save = useCallback(async (): Promise<boolean> => {
+    if (dead.current) return false;
+    const sent = snap(live.current);
+    const res = await fetch('/api/attempts', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: patchBody() });
     if (res.status === 409) {
-      alert('이미 제출된 기록입니다');
-      router.refresh();
+      if (!dead.current) {
+        dead.current = true;
+        setRunning(false);
+        alert('이미 제출된 기록입니다');
+        router.refresh();
+      }
       return false;
     }
+    if (res.ok) saved.current = sent;
     return res.ok;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attempt.path, router]);
 
+  // 타이머가 멈춰 있어도 입력은 1.5초 뒤 저장한다.
   useEffect(() => {
-    if (!running) return;
+    if (!draft || snap(live.current) === saved.current) return;
+    const t = setTimeout(() => void save(), 1500);
+    return () => clearTimeout(t);
+  }, [draft, memo, links, mine, explanation, tab, save]);
+
+  // 탭을 닫거나 이동할 때 마지막 저장.
+  useEffect(() => {
+    if (!draft) return;
+    const h = () => {
+      if (dead.current) return;
+      void fetch('/api/attempts', { method: 'PATCH', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: patchBody() });
+    };
+    window.addEventListener('pagehide', h);
+    return () => window.removeEventListener('pagehide', h);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, attempt.path]);
+
+  useEffect(() => {
+    if (!running || !draft) return;
     base.current.startedAt = Date.now();
     const tick = setInterval(() => setSeconds(elapsed()), 1000);
     const autosave = setInterval(() => void save(), 30000);
@@ -123,7 +155,7 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
       clearInterval(autosave);
       base.current = { seconds: elapsed(), startedAt: 0 };
     };
-  }, [running, save]);
+  }, [running, draft, save]);
 
   const pause = async () => {
     setRunning(false);
@@ -146,36 +178,57 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
     setTab('write');
   };
 
+  const token = useRef(0); // 권한 대기 중 취소를 알아차리기 위한 번호
+
   const startRecording = async () => {
     fellBack.current = false;
     setNotice('');
-    recordingRef.current = true;
-    setRecording(true);
-    setTab('voice');
+    const id = ++token.current;
+    setRecState('pending');
+    let s: MediaStream;
     try {
-      const s = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.current = s;
-      const chunks: Blob[] = [];
-      const mr = new MediaRecorder(s, { mimeType: 'audio/webm' });
-      mr.ondataavailable = (e) => e.data.size && chunks.push(e.data);
-      mr.onstop = async () => {
-        s.getTracks().forEach((t) => t.stop());
-        if (!chunks.length) return;
-        setUploading(true);
-        try {
-          await fetch(`/api/audio?path=${encodeURIComponent(attempt.path)}`, { method: 'POST', body: new Blob(chunks, { type: 'audio/webm' }) });
-        } finally {
-          setUploading(false);
-        }
-      };
-      mr.start();
-      recorder.current = mr;
+      s = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
-      fallback(); // 마이크 거부·미지원
-      recordingRef.current = false;
-      setRecording(false);
+      if (token.current === id) {
+        setRecState('idle');
+        fallback(); // 마이크 거부·미지원
+      }
       return;
     }
+    if (token.current !== id) {
+      s.getTracks().forEach((t) => t.stop()); // 대기 중에 정지를 눌렀다
+      return;
+    }
+    const chunks: Blob[] = [];
+    let mr: MediaRecorder;
+    try {
+      mr = new MediaRecorder(s, { mimeType: 'audio/webm' });
+    } catch {
+      s.getTracks().forEach((t) => t.stop());
+      setRecState('idle');
+      fallback();
+      return;
+    }
+    stream.current = s;
+    mr.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+    mr.onstop = async () => {
+      s.getTracks().forEach((t) => t.stop());
+      if (!chunks.length) return;
+      setUploading(true);
+      try {
+        const res = await fetch(`/api/audio?path=${encodeURIComponent(attempt.path)}`, { method: 'POST', body: new Blob(chunks, { type: 'audio/webm' }) });
+        if (!res.ok) setNotice('녹음 파일을 저장하지 못했어요');
+      } catch {
+        setNotice('녹음 파일을 저장하지 못했어요');
+      } finally {
+        setUploading(false);
+      }
+    };
+    mr.start();
+    recorder.current = mr;
+    recordingRef.current = true;
+    setRecState('rec');
+    setTab('voice');
     const SR = (window as unknown as { webkitSpeechRecognition?: new () => Recognition }).webkitSpeechRecognition;
     if (!SR) return fallback();
     const r = new SR();
@@ -210,8 +263,9 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
   };
 
   const stopRecording = () => {
+    token.current++;
     recordingRef.current = false;
-    setRecording(false);
+    setRecState('idle');
     const r = recog.current;
     recog.current = null;
     r?.stop();
@@ -221,7 +275,9 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
 
   useEffect(() => () => {
     recordingRef.current = false;
+    token.current++;
     recog.current?.stop();
+    if (recorder.current?.state === 'recording') recorder.current.stop();
     stream.current?.getTracks().forEach((t) => t.stop());
   }, []);
 
@@ -416,8 +472,8 @@ export default function StudyRunner(props: { attempt: Attempt; question: Questio
         <div className="mb-3 flex items-center gap-2">
           <h2 className="mr-auto font-bold">설명</h2>
           <button type="button" className={`${BTN} ${tab === 'write' ? 'bg-[#1c1a17] text-white' : 'bg-white'}`} onClick={() => setTab('write')}>글 쓰기</button>
-          <button type="button" disabled={uploading} className={`${BTN} ${recording ? 'bg-[#b3261e] text-white' : 'bg-white'}`} onClick={() => (recording ? stopRecording() : void startRecording())}>
-            {recording ? '● REC 정지' : '말로 설명'}
+          <button type="button" disabled={uploading} className={`${BTN} ${recState === 'rec' ? 'bg-[#b3261e] text-white' : 'bg-white'}`} onClick={() => (recording ? stopRecording() : void startRecording())}>
+            {recState === 'rec' ? '● REC 정지' : recState === 'pending' ? '마이크 권한 대기… (취소)' : '말로 설명'}
           </button>
         </div>
         {notice && <p role="status" className="mb-2 text-sm font-semibold text-[#b3261e]">{notice}</p>}
