@@ -7,7 +7,7 @@ const SOURCES = ['real', 'mock', 'self', 'followup'] as const;
 const KINDS = ['concept', 'experience'] as const;
 
 export function POST(req: Request) {
-  return respond(async () => {
+  return respond(req, async () => {
     const b = await readJson(req);
     const text = nonEmpty(b.text, 'text');
     const topic = nonEmpty(b.topic, 'topic');

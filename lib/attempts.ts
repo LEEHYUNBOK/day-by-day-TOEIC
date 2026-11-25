@@ -7,6 +7,9 @@ import type { Attempt, Rubric, Status } from './types';
 export class NotDraftError extends Error {
   constructor() { super('attempt is not a draft'); this.name = 'NotDraftError'; }
 }
+export class ValidationError extends Error {
+  constructor(m: string) { super(m); this.name = 'ValidationError'; }
+}
 export class BadPathError extends Error {
   constructor() { super('bad attempt path'); this.name = 'BadPathError'; }
 }
@@ -139,7 +142,7 @@ export function saveDraft(root: string, p: string, patch: Patch): Attempt {
   const { n, file, data, body: b0 } = loadDraft(root, p);
   let body = b0;
   if (patch.seconds !== undefined) {
-    if (!Number.isFinite(patch.seconds) || patch.seconds < 0) throw new Error('invalid seconds');
+    if (!Number.isFinite(patch.seconds) || patch.seconds < 0) throw new ValidationError('invalid seconds');
     data.seconds = Math.floor(patch.seconds);
   }
   if (patch.links !== undefined) data.links = patch.links;
@@ -158,9 +161,9 @@ export function submitAttempt(
 ): Attempt {
   const { n, file, data, body: b0 } = loadDraft(root, p);
   const explanation = input.explanation.trim();
-  if (!explanation) throw new Error('explanation is empty');
-  if (!CONCEPT.includes(input.self?.concept) || !TRADEOFF.includes(input.self?.tradeoff)) throw new Error('invalid self score');
-  if (input.mode !== 'write' && input.mode !== 'voice') throw new Error('invalid mode');
+  if (!explanation) throw new ValidationError('explanation is empty');
+  if (!CONCEPT.includes(input.self?.concept) || !TRADEOFF.includes(input.self?.tradeoff)) throw new ValidationError('invalid self score');
+  if (input.mode !== 'write' && input.mode !== 'voice') throw new ValidationError('invalid mode');
 
   const seconds = num(data.seconds) ?? 0;
   delete data.seconds;

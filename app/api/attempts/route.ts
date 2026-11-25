@@ -4,7 +4,7 @@ import { assertAttemptPath, readAttempt, saveDraft, startAttempt, today } from '
 import { HttpError, bad, nonEmpty, readJson, respond } from '@/lib/api';
 
 export function POST(req: Request) {
-  return respond(async () => {
+  return respond(req, async () => {
     const b = await readJson(req);
     const id = nonEmpty(b.questionId, 'questionId').normalize('NFC');
     if (!readQuestion(DATA_ROOT, id)) throw new HttpError(404, 'question not found');
@@ -13,7 +13,7 @@ export function POST(req: Request) {
 }
 
 export function PATCH(req: Request) {
-  return respond(async () => {
+  return respond(req, async () => {
     const b = await readJson(req);
     const p = assertAttemptPath(nonEmpty(b.path, 'path'));
     const raw = b.patch;

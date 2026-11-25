@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { BadPathError, NotDraftError } from '@/lib/attempts';
+import { BadPathError, NotDraftError, ValidationError } from '@/lib/attempts';
 
 export class HttpError extends Error {
   constructor(public status: number, message: string) { super(message); }
@@ -7,20 +7,29 @@ export class HttpError extends Error {
 
 export const bad = (message: string) => new HttpError(400, message);
 
-// Runs a handler body; maps known errors to statuses, logs and 500s the rest.
-export async function respond(fn: () => Promise<unknown> | unknown): Promise<NextResponse> {
+// Runs a write handler body. Rejects cross-site browser requests first, maps known
+// errors to statuses, logs and 500s the rest.
+export async function respond(req: Request, fn: () => Promise<unknown> | unknown): Promise<NextResponse> {
   try {
+    const site = req.headers.get('sec-fetch-site');
+    if (site !== null && site !== 'same-origin' && site !== 'none') throw new HttpError(403, 'cross-site request refused');
     return NextResponse.json(await fn());
   } catch (e) {
     const err = e as Error;
     const status =
-      e instanceof HttpError ? e.status : e instanceof BadPathError ? 400 : e instanceof NotDraftError ? 409 : 500;
+      e instanceof HttpError ? e.status
+      : e instanceof BadPathError || e instanceof ValidationError ? 400
+      : e instanceof NotDraftError ? 409
+      : 500;
     if (status === 500) console.error(e);
     return NextResponse.json({ error: err.message }, { status });
   }
 }
 
 export async function readJson(req: Request): Promise<Record<string, unknown>> {
+  if (!(req.headers.get('content-type') ?? '').startsWith('application/json')) {
+    throw new HttpError(415, 'content-type must be application/json');
+  }
   let body: unknown;
   try {
     body = await req.json();

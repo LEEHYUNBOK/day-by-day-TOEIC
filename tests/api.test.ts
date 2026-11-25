@@ -16,7 +16,38 @@ import { POST as submit } from '@/app/api/attempts/submit/route';
 import { POST as postAudio } from '@/app/api/audio/route';
 
 const json = (url: string, method: string, body: unknown) =>
-  new NextRequest(`http://x${url}`, { method, body: typeof body === 'string' ? body : JSON.stringify(body) });
+  new NextRequest(`http://x${url}`, {
+    method,
+    body: typeof body === 'string' ? body : JSON.stringify(body),
+    headers: { 'content-type': 'application/json' },
+  });
+
+describe('request guards', () => {
+  const body = JSON.stringify({ text: 'g', topic: 't', source: 'mock' });
+  const mk = (headers: Record<string, string>) => new NextRequest('http://x/api/questions', { method: 'POST', body, headers });
+  it('415 on non-JSON content type', async () => {
+    expect((await postQuestion(mk({ 'content-type': 'text/plain' }))).status).toBe(415);
+  });
+  it('403 on cross-site, ok on same-origin/none/absent', async () => {
+    const j = { 'content-type': 'application/json' };
+    expect((await postQuestion(mk({ ...j, 'sec-fetch-site': 'cross-site' }))).status).toBe(403);
+    expect((await postQuestion(mk({ ...j, 'sec-fetch-site': 'same-site' }))).status).toBe(403);
+    expect((await postQuestion(mk({ ...j, 'sec-fetch-site': 'same-origin' }))).status).toBe(200);
+    expect((await postQuestion(mk({ ...j, 'sec-fetch-site': 'none' }))).status).toBe(200);
+    expect((await postQuestion(mk(j))).status).toBe(200);
+    const a = new NextRequest('http://x/api/audio?path=study/2026-01-01/a.md', {
+      method: 'POST', body: new Blob([new Uint8Array([1])]), headers: { 'sec-fetch-site': 'cross-site' },
+    });
+    expect((await postAudio(a)).status).toBe(403);
+  });
+  it('audio refuses non-draft attempts (409)', async () => {
+    const q = await (await postQuestion(json('/api/questions', 'POST', { text: '제출된 질문', topic: 't', source: 'mock' }))).json();
+    const p = (await (await postAttempt(json('/api/attempts', 'POST', { questionId: q.question.id }))).json()).attempt.path;
+    await submit(json('/api/attempts/submit', 'POST', { path: p, explanation: 'e', mode: 'write', self: { concept: 0, tradeoff: 0 } }));
+    const r = new NextRequest(`http://x/api/audio?path=${encodeURIComponent(p)}`, { method: 'POST', body: new Blob([new Uint8Array([1])]) });
+    expect((await postAudio(r)).status).toBe(409);
+  });
+});
 
 describe('write APIs', () => {
   it('question -> attempt -> patch -> submit -> patch 409', async () => {
